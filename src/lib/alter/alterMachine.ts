@@ -33,6 +33,14 @@ export function uniqueCategoriesFor(clues: AlterClueRecord[]): number {
   return new Set(clues.map((clue) => clue.category)).size;
 }
 
+export function hasClue(state: AlterState, clueId: AlterClueId): boolean {
+  return state.discoveredClues.some((clue) => clue.id === clueId);
+}
+
+export function canDiscoverClue(state: AlterState, clueId: AlterClueId): boolean {
+  return !hasClue(state, clueId);
+}
+
 export function toStoredAlterState(state: AlterState): AlterStoredState {
   return {
     version: 1,

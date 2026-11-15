@@ -13,6 +13,8 @@ interface SelectedWorkProps {
   onTraceReset: () => void;
   onVectorInteraction: (event: VectorDemoEvent) => void;
   visualizeResetToken: number;
+  onInspectOrientation: () => void;
+  onArchiveNote: () => void;
 }
 
 const statusTone = (status: string) => {
@@ -87,7 +89,7 @@ const DeepResearch: React.FC<DeepResearchProps> = ({ onTraceInspect, traceSeen, 
   );
 };
 
-const Visualize: React.FC<{ onVectorInteraction: (event: VectorDemoEvent) => void; resetToken: number }> = ({ onVectorInteraction, resetToken }) => {
+const Visualize: React.FC<{ onVectorInteraction: (event: VectorDemoEvent) => void; resetToken: number; onInspectOrientation: () => void }> = ({ onVectorInteraction, resetToken, onInspectOrientation }) => {
   const project = projects.find((item) => item.id === 'visualize') ?? projects[1];
 
   return (
@@ -99,7 +101,7 @@ const Visualize: React.FC<{ onVectorInteraction: (event: VectorDemoEvent) => voi
       </header>
 
       <div className="visualize-workspace">
-        <VectorDemo onInteraction={onVectorInteraction} resetToken={resetToken} />
+        <VectorDemo onInteraction={onVectorInteraction} resetToken={resetToken} onInspectOrientation={onInspectOrientation} />
       </div>
 
       <div className="visualize-companion-row">
@@ -116,7 +118,7 @@ const Visualize: React.FC<{ onVectorInteraction: (event: VectorDemoEvent) => voi
   );
 };
 
-const Umkm: React.FC = () => {
+const Umkm: React.FC<{ onArchiveNote: () => void }> = ({ onArchiveNote }) => {
   const project = projects.find((item) => item.id === 'umkm-ecommerce') ?? projects[2];
 
   return (
@@ -130,7 +132,7 @@ const Umkm: React.FC = () => {
       <a className="project-image-link umkm-image" href="/assets/portfolio/ecommerce.png" target="_blank" rel="noreferrer" aria-label="Open the Bilqish commerce project screenshot at full size">
         <img src="/assets/portfolio/ecommerce.png" alt="Bilqish commerce homepage featuring a shoe collection and editorial product photography" loading="lazy" decoding="async" />
       </a>
-      <div className="media-story-details"><p>{project.caseStudy.problem}</p><ProjectFacts project={project} /><TechList items={project.technologies} /></div>
+      <div className="media-story-details"><p>{project.caseStudy.problem}</p><ProjectFacts project={project} /><TechList items={project.technologies} /><button type="button" className="text-link" onClick={onArchiveNote}>Archive footnote / 04</button></div>
     </article>
   );
 };
@@ -153,7 +155,7 @@ const Starlink: React.FC = () => {
   );
 };
 
-export const SelectedWork: React.FC<SelectedWorkProps> = ({ onTraceInspect, traceSeen, onTraceStart, onTracePause, onTraceComplete, onTraceReset, onVectorInteraction, visualizeResetToken }) => (
+export const SelectedWork: React.FC<SelectedWorkProps> = ({ onTraceInspect, traceSeen, onTraceStart, onTracePause, onTraceComplete, onTraceReset, onVectorInteraction, visualizeResetToken, onInspectOrientation, onArchiveNote }) => (
   <section id="work" className="section section--work">
     <div className="container">
       <header className="section-head">
@@ -175,8 +177,8 @@ export const SelectedWork: React.FC<SelectedWorkProps> = ({ onTraceInspect, trac
           onTraceComplete={onTraceComplete}
           onTraceReset={onTraceReset}
         />
-        <Visualize onVectorInteraction={onVectorInteraction} resetToken={visualizeResetToken} />
-        <Umkm />
+        <Visualize onVectorInteraction={onVectorInteraction} resetToken={visualizeResetToken} onInspectOrientation={onInspectOrientation} />
+        <Umkm onArchiveNote={onArchiveNote} />
         <Starlink />
       </div>
     </div>

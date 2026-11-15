@@ -291,3 +291,103 @@
     width: min(330px, calc(100vw - 20px));
   }
 }
+
+/* B3: discreet investigation prompt and reveal-preview controls. */
+.alter-investigate {
+  position: fixed;
+  left: 18px;
+  bottom: 18px;
+  z-index: 950;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  max-width: min(420px, calc(100vw - 36px));
+  padding: 9px 11px;
+  border: 1px solid var(--border-strong);
+  background: var(--surface);
+  color: var(--ink);
+  box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.14);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  line-height: 1.4;
+}
+
+.alter-investigate span {
+  color: var(--ink-2);
+}
+
+.alter-investigate button {
+  min-height: 34px;
+  padding: 5px 9px;
+  border: 1px solid var(--border-strong);
+  background: var(--ink);
+  color: #fff;
+  font: inherit;
+  cursor: pointer;
+}
+
+.alter-investigate button:hover {
+  background: var(--accent);
+}
+
+.alter-investigate button:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 2px;
+}
+
+.alter-reveal-bar {
+  position: fixed;
+  top: 14px;
+  right: 14px;
+  z-index: 10000;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  max-width: min(520px, calc(100vw - 28px));
+  padding: 8px 10px;
+  border: 1px solid var(--border-strong);
+  background: var(--surface);
+  color: var(--ink);
+  box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.18);
+  font-family: var(--font-mono);
+  font-size: 11px;
+}
+
+.alter-reveal-bar span {
+  color: var(--ink-2);
+}
+
+.alter-reveal-bar button {
+  min-height: 34px;
+  padding: 5px 9px;
+  border: 1px solid var(--border-strong);
+  background: var(--ink);
+  color: #fff;
+  font: inherit;
+  cursor: pointer;
+}
+
+.alter-reveal-bar button:hover {
+  background: var(--accent);
+}
+
+.alter-reveal-bar button:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 2px;
+}
+
+@media (max-width: 600px) {
+  .alter-investigate {
+    left: 8px;
+    bottom: 8px;
+    max-width: calc(100vw - 16px);
+  }
+
+  .alter-reveal-bar {
+    top: 8px;
+    right: 8px;
+    max-width: calc(100vw - 16px);
+  }
+}

@@ -4,6 +4,7 @@ export type FractureIntensity = 'G0' | 'G1' | 'G2' | 'G3';
 
 interface AlterFractureLabProps {
   initialIntensity: FractureIntensity;
+  showControls?: boolean;
 }
 
 const MAIN_PATH = `M 200 -40
@@ -25,7 +26,7 @@ const WHISPER_PATH = 'M 472 318 L 478 313 L 482 321 L 492 317';
 
 const intensityLabels: FractureIntensity[] = ['G0', 'G1', 'G2', 'G3'];
 
-export function AlterFractureLab({ initialIntensity }: AlterFractureLabProps) {
+export function AlterFractureLab({ initialIntensity, showControls = true }: AlterFractureLabProps) {
   const [intensity, setIntensity] = useState<FractureIntensity>(initialIntensity);
   const [visible, setVisible] = useState(true);
   const [reduced, setReduced] = useState(false);
@@ -151,6 +152,7 @@ export function AlterFractureLab({ initialIntensity }: AlterFractureLabProps) {
         </div>
       )}
 
+      {showControls && (
       <aside className="alter-fracture__controls" aria-label="Alter fracture proof of concept controls" data-alter-fracture-controls="true">
         <strong>ALTER / FRACTURE LAB</strong>
         <div>Intensity: {visible ? intensity : 'off'} | {reduced ? 'static' : 'animated'}</div>
@@ -184,6 +186,7 @@ export function AlterFractureLab({ initialIntensity }: AlterFractureLabProps) {
         </div>
         <p>QA only. Static SVG fallback when motion is reduced.</p>
       </aside>
+      )}
     </>
   );
 }

@@ -16,6 +16,7 @@ export interface VectorDemoEvent {
 interface VectorDemoProps {
   onInteraction?: (event: VectorDemoEvent) => void;
   resetToken?: number;
+  onInspectOrientation?: () => void;
 }
 
 const initialVector: Vector3 = [2, 2, 1];
@@ -37,7 +38,7 @@ function projectVector([x, y, z]: Vector3, scale: number) {
 const determinantOf = ([a, b, c, d]: Matrix2) => a * d - b * c;
 const format = (value: number) => `${value < 0 ? '−' : ''}${Math.abs(value).toFixed(2)}`;
 
-export function VectorDemo({ onInteraction, resetToken = 0 }: VectorDemoProps) {
+export function VectorDemo({ onInteraction, resetToken = 0, onInspectOrientation }: VectorDemoProps) {
   const host = useRef<HTMLDivElement>(null);
   const vectorRef = useRef<Vector3>(initialVector);
   const matrixRef = useRef<Matrix2>(presets[2].matrix);
@@ -285,7 +286,7 @@ export function VectorDemo({ onInteraction, resetToken = 0 }: VectorDemoProps) {
       <div className="vector-control-deck">
         <section className="vector-control-group vector-explore" aria-labelledby="vector-explore-title"><h4 id="vector-explore-title">Transformation</h4><div className="matrix-presets" role="group" aria-label="Matrix transformation presets">{presets.map((preset) => <button key={preset.name} type="button" aria-pressed={activePreset === preset.name} onClick={() => selectPreset(preset)}>{preset.name}</button>)}</div></section>
         <section className="vector-control-group vector-inputs" aria-labelledby="vector-inputs-title"><div className="vector-group-heading"><h4 id="vector-inputs-title">Source vector</h4><span>Range −3 to 3</span></div><div className="vector-controls">{values.map((value, index) => <label key={index}><span>{['X', 'Y', 'Z'][index]}</span><output>{value.toFixed(1)}</output><input aria-label={`Source vector ${['X', 'Y', 'Z'][index]}`} type="range" min="-3" max="3" step="0.1" value={value} onChange={(event) => changeComponent(index, Number(event.target.value))} onPointerUp={() => emit('vector-committed')} onKeyUp={(event) => { if (event.key.startsWith('Arrow') || event.key === 'Home' || event.key === 'End') emit('vector-committed'); }} /></label>)}</div></section>
-        <section className="vector-control-group vector-results" aria-labelledby="vector-results-title"><div className="vector-group-heading"><h4 id="vector-results-title">Results</h4><button type="button" onClick={performReset}>Reset scene</button></div><div className="vector-result-grid" aria-live="polite"><div className="vector-result-item"><span>Original vector</span><strong>({values.map(format).join(', ')})</strong></div><div className="vector-result-item"><span>Transformed vector</span><strong>({transformed.map(format).join(', ')})</strong></div><div className="vector-result-item"><span>Matrix</span><table className="vector-matrix" aria-label="Current 2 by 2 matrix"><tbody><tr><td>{format(a)}</td><td>{format(b)}</td></tr><tr><td>{format(c)}</td><td>{format(d)}</td></tr></tbody></table></div><div className="vector-result-item"><span>Determinant</span><strong>{format(determinant)}</strong></div></div><p className="vector-interpretation">{interpretation}</p></section>
+        <section className="vector-control-group vector-results" aria-labelledby="vector-results-title"><div className="vector-group-heading"><h4 id="vector-results-title">Results</h4><button type="button" onClick={performReset}>Reset scene</button></div><div className="vector-result-grid" aria-live="polite"><div className="vector-result-item"><span>Original vector</span><strong>({values.map(format).join(', ')})</strong></div><div className="vector-result-item"><span>Transformed vector</span><strong>({transformed.map(format).join(', ')})</strong></div><div className="vector-result-item"><span>Matrix</span><table className="vector-matrix" aria-label="Current 2 by 2 matrix"><tbody><tr><td>{format(a)}</td><td>{format(b)}</td></tr><tr><td>{format(c)}</td><td>{format(d)}</td></tr></tbody></table></div><div className="vector-result-item"><span>Determinant</span><strong>{format(determinant)}</strong></div></div><p className="vector-interpretation">{interpretation}</p>{determinant < 0 && onInspectOrientation && <button type="button" className="vector-inspect" onClick={onInspectOrientation}>Inspect orientation</button>}</section>
       </div>
     </div>
   );

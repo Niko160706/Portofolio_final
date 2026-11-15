@@ -25,6 +25,8 @@ import { AlterDebugPanel } from '../alter/AlterDebugPanel';
 import { AlterFractureLab, type FractureIntensity } from '../alter/AlterFractureLab';
 import { useAlterExperience } from '../../lib/alter/useAlterExperience';
 import { shouldShowAlterDebug } from '../../lib/alter/alterDebug';
+import { canDiscoverClue } from '../../lib/alter/alterMachine';
+import type { AlterClueId } from '../../lib/alter/alterTypes';
 import {
   archiveNoteEvent,
   moroActionEvent,
@@ -43,6 +45,7 @@ export const EditorialApp: React.FC = () => {
   const alter = useAlterExperience();
   const [showAlterDebug, setShowAlterDebug] = useState(false);
   const [fractureIntensity, setFractureIntensity] = useState<FractureIntensity | null>(null);
+  const [clueFlash, setClueFlash] = useState<{ id: AlterClueId; key: number } | null>(null);
 
   useEffect(() => {
     const alterMode = import.meta.env.DEV || import.meta.env.MODE === 'alter-debug';
@@ -79,6 +82,19 @@ export const EditorialApp: React.FC = () => {
   const [visualizeContext, setVisualizeContext] = useState<{ current?: VectorDemoEvent; previous?: VectorDemoEvent }>({});
   const copyTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const moroRef = useRef<MoroCompanionHandle>(null);
+  const clueFlashTimer = useRef<number | null>(null);
+
+  const discoverClue = (clueId: AlterClueId) => {
+    if (!canDiscoverClue(alter.state, clueId)) return;
+    alter.dispatch({ type: 'anomaly.clue.discovered', clueId, discoveredAt: Date.now() });
+    setClueFlash({ id: clueId, key: Date.now() });
+    if (clueFlashTimer.current !== null) window.clearTimeout(clueFlashTimer.current);
+    clueFlashTimer.current = window.setTimeout(() => setClueFlash(null), 520);
+  };
+
+  useEffect(() => () => {
+    if (clueFlashTimer.current !== null) window.clearTimeout(clueFlashTimer.current);
+  }, []);
 
   useEffect(() => {
     if (!storageReady) return;
@@ -125,6 +141,7 @@ export const EditorialApp: React.FC = () => {
   };
 
   const handleInspectTrace = () => {
+    discoverClue('C02');
     alter.dispatch(researchInspectEvent('trace-04'));
     dispatchNarrative({ type: 'RESEARCH_TRACE_INSPECTED', projectId: 'deep-research' });
     if (narrative.effectsEnabled) {
@@ -217,6 +234,8 @@ export const EditorialApp: React.FC = () => {
           onTraceReset={handleResearchReset}
           onVectorInteraction={handleVectorInteraction}
           visualizeResetToken={visualizeResetToken}
+          onInspectOrientation={() => discoverClue('C03')}
+          onArchiveNote={() => discoverClue('C04')}
         />
 
         <LabSection
@@ -240,6 +259,8 @@ export const EditorialApp: React.FC = () => {
         onInspectSystem={handleInspectAssistant}
         visualizeContext={visualizeContext}
         onResetVisualize={() => setVisualizeResetToken((value) => value + 1)}
+        onDiscoverClue={discoverClue}
+        discoveredClues={alter.state.discoveredClues.map((clue) => clue.id)}
       />
 
       <SiteFooter
@@ -269,6 +290,50 @@ export const EditorialApp: React.FC = () => {
             }}
           />
         </UtilityDialog>
+      )}
+
+      {clueFlash && (
+        <AlterFractureLab key={clueFlash.key} initialIntensity="G1" showControls={false} />
+      )}
+
+      {alter.state.phase === 'P2' && (
+        <div className="alter-investigate" role="region" aria-label="Anomaly investigation" data-alter-investigate="true">
+          <span>{alter.state.uniqueCategories} discrepancies recorded</span>
+          <button
+            id="alter-investigate-button"
+            type="button"
+            onClick={() => alter.dispatch({ type: 'alter.reveal.requested', at: Date.now() })}
+          >
+            Investigate anomaly
+          </button>
+        </div>
+      )}
+
+      {alter.state.phase === 'P3' && (
+        <>
+          <AlterFractureLab initialIntensity="G3" showControls={false} />
+          <div
+            className="alter-reveal-bar"
+            role="dialog"
+            aria-modal="false"
+            aria-label="Fracture preview"
+            data-alter-reveal="true"
+          >
+            <span>Interactive fiction / Fracture preview</span>
+            <button
+              type="button"
+              onClick={() => {
+                alter.dispatch({ type: 'alter.exit.requested', at: Date.now() });
+                window.setTimeout(
+                  () => document.querySelector<HTMLElement>('.moro-companion__trigger')?.focus(),
+                  80
+                );
+              }}
+            >
+              Return to site
+            </button>
+          </div>
+        </>
       )}
 
       {fractureIntensity && <AlterFractureLab initialIntensity={fractureIntensity} />}

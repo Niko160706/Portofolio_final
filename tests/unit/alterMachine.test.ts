@@ -1,8 +1,10 @@
 import { describe, expect, it } from 'vitest';
 import {
   alterReducer,
+  canDiscoverClue,
   canRunPassiveEffect,
   createInitialAlterState,
+  hasClue,
   toStoredAlterState,
   uniqueCategoriesFor
 } from '../../src/lib/alter/alterMachine';
@@ -271,6 +273,23 @@ describe('alterMachine', () => {
       type: 'archive.note.inspected',
       noteId: 'observer-log'
     });
+  });
+
+  it('28. canDiscoverClue rejects an already discovered clue', () => {
+    const state = discover(createInitialAlterState(), 'C01', 1);
+    expect(hasClue(state, 'C01')).toBe(true);
+    expect(canDiscoverClue(state, 'C01')).toBe(false);
+    expect(canDiscoverClue(state, 'C02')).toBe(true);
+  });
+
+  it('29. three distinct clue categories are the only P2 gate', () => {
+    const two = withClues('C01', 'C02');
+    expect(canDiscoverClue(two, 'C03')).toBe(true);
+    const three = discover(two, 'C03', 3);
+    expect(three.phase).toBe('P2');
+    const fourth = discover(three, 'C04', 4);
+    expect(fourth.phase).toBe('P2');
+    expect(fourth.uniqueCategories).toBe(4);
   });
 
   it('27. uniqueCategoriesFor counts categories, not clue records', () => {
