@@ -1,0 +1,147 @@
+---
+import DocumentLayout from '../layouts/DocumentLayout.astro';
+import { profile } from '../data/profile';
+---
+
+<DocumentLayout
+  title="Contact Channels | THE HUMAN PROTOCOL"
+  description="Direct communication links, LinkedIn, GitHub, location, and resume PDF for Niko Rajani Syahputra."
+>
+  <article class="doc-page">
+    <header class="doc-hero">
+      <div class="section-index">
+        <span class="pixel-label">[CONTACT / CHANNELS]</span>
+        <span class="section-index__rule" aria-hidden="true"></span>
+        <span class="micro-label">DIRECT / NO FORMS</span>
+      </div>
+      <h1 class="doc-title">
+        Contact
+        <span class="accent-serif accent-word">channels.</span>
+      </h1>
+      <p class="doc-intro">
+        Direct channels for data engineering internship inquiries, technical evaluations, or project
+        collaborations. No intermediary form and no automated scraping.
+      </p>
+    </header>
+
+    <div class="contact-doc">
+      <div>
+        <span class="contact-doc__label">EMAIL</span>
+        <a href={`mailto:${profile.email}`} class="contact-doc__email">{profile.email}</a>
+
+        <div class="doc-copy-row">
+          <button
+            type="button"
+            class="button button--outline"
+            id="copy-email-button"
+            data-email={profile.email}
+          >
+            Copy address
+          </button>
+          <span class="doc-copy-status" id="copy-email-status" aria-live="polite">
+            Opens your mail client.
+          </span>
+        </div>
+
+        <p class="contact-doc__note">
+          Seeking a Data Engineering internship for Semester 6. Also open to AI systems and
+          full-stack web work. Based in {profile.location}.
+        </p>
+
+        <div class="doc-callout">
+          <strong>Privacy note:</strong> this site has no contact form. A direct email keeps the
+          conversation private and avoids automated scraper spam.
+        </div>
+      </div>
+
+      <nav class="channel-list" aria-label="Contact and profile links">
+        <a
+          href={profile.linkedinUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="channel-row"
+        >
+          <span class="channel-row__label">LinkedIn</span>
+          <span class="channel-row__value">niko-rajani-syahputra</span>
+          <span class="channel-row__arrow" aria-hidden="true">↗</span>
+        </a>
+
+        <a
+          href={profile.githubUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="channel-row"
+        >
+          <span class="channel-row__label">GitHub</span>
+          <span class="channel-row__value">Niko160706</span>
+          <span class="channel-row__arrow" aria-hidden="true">↗</span>
+        </a>
+
+        <a href="/resume.pdf" target="_blank" rel="noopener noreferrer" class="channel-row">
+          <span class="channel-row__label">Curriculum vitae</span>
+          <span class="channel-row__value">Verified resume (PDF)</span>
+          <span class="channel-row__arrow" aria-hidden="true">↓</span>
+        </a>
+
+        <a href="/projects/" class="channel-row">
+          <span class="channel-row__label">Project archive</span>
+          <span class="channel-row__value">All case studies</span>
+          <span class="channel-row__arrow" aria-hidden="true">→</span>
+        </a>
+
+        <div class="channel-row channel-row--static">
+          <span class="channel-row__label">Location</span>
+          <span class="channel-row__value">{profile.location}</span>
+          <span class="channel-row__arrow" aria-hidden="true">◉</span>
+        </div>
+      </nav>
+    </div>
+  </article>
+</DocumentLayout>
+
+<style>
+  .doc-copy-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px;
+    margin-top: 20px;
+  }
+
+  .doc-copy-status {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+  }
+</style>
+
+<script>
+  const button = document.getElementById('copy-email-button') as HTMLButtonElement | null;
+  const status = document.getElementById('copy-email-status');
+
+  button?.addEventListener('click', async () => {
+    const email = button.dataset.email || '';
+    try {
+      await navigator.clipboard.writeText(email);
+      button.textContent = 'Copied ✓';
+      if (status) status.textContent = 'Email address copied to clipboard.';
+    } catch {
+      const emailElement = document.querySelector('.contact-doc__email');
+      if (emailElement) {
+        const range = document.createRange();
+        range.selectNodeContents(emailElement);
+        const selection = window.getSelection();
+        selection?.removeAllRanges();
+        selection?.addRange(range);
+      }
+      if (status) status.textContent = 'Clipboard unavailable: email selected for manual copy.';
+    }
+
+    window.setTimeout(() => {
+      button.textContent = 'Copy address';
+      if (status) status.textContent = 'Opens your mail client.';
+    }, 3000);
+  });
+</script>

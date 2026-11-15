@@ -1,0 +1,27 @@
+---
+import DocumentLayout from './DocumentLayout.astro';
+import type { ProjectData } from '../data/projects';
+
+interface Props {
+  project: ProjectData;
+}
+
+const { project } = Astro.props;
+---
+
+<DocumentLayout
+  title={`${project.title}: Case Study | THE HUMAN PROTOCOL`}
+  description={project.summary}
+>
+  <article class="cs-page">
+    <nav class="cs-breadcrumb" aria-label="Breadcrumbs">
+      <a href="/">Index</a>
+      <span class="cs-breadcrumb__sep" aria-hidden="true">/</span>
+      <a href="/projects/">Project archive</a>
+      <span class="cs-breadcrumb__sep" aria-hidden="true">/</span>
+      <span class="cs-breadcrumb__current">{project.shortTitle}</span>
+    </nav>
+    <p class="cs-source-note">Project descriptions are supplied portfolio records. Performance figures and deployment claims below have not been independently re-verified for this implementation.</p>
+    <slot />
+  </article>
+</DocumentLayout>

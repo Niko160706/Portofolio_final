@@ -1,0 +1,62 @@
+---
+const navItems = [
+  { href: '/#work', label: 'Work' },
+  { href: '/#lab', label: 'Lab' },
+  { href: '/#methods', label: 'Methods' },
+  { href: '/#about', label: 'About' },
+  { href: '/#contact', label: 'Contact' },
+];
+---
+
+<header class="site-header doc-site-header">
+  <div class="site-header-inner">
+    <a href="/" class="brand" aria-label="The Human Protocol, home">
+      <span class="brand-mark" aria-hidden="true">NR</span>
+      <span class="brand-copy">
+        <span class="brand-name">Niko Rajani</span>
+        <span class="bitmap-label brand-label">The Human Protocol</span>
+      </span>
+    </a>
+
+    <nav class="site-nav" aria-label="Primary navigation">
+      {navItems.map((item) => (
+        <a href={item.href} class="site-nav__link">{item.label}</a>
+      ))}
+    </nav>
+
+    <a href="/resume.pdf" target="_blank" rel="noopener noreferrer" class="header-cv">
+      CV <span aria-hidden="true">↓</span>
+    </a>
+
+    <details class="mobile-menu-details">
+      <summary class="menu-toggle">Menu</summary>
+      <nav class="mobile-menu" aria-label="Mobile navigation">
+        {navItems.map((item, index) => (
+          <a href={item.href}>
+            <span>{item.label}</span>
+            <span class="mono-label">0{index + 1}</span>
+          </a>
+        ))}
+        <a href="/resume.pdf" target="_blank" rel="noopener noreferrer" class="mobile-menu__cv">
+          Download CV <span aria-hidden="true">↓</span>
+        </a>
+      </nav>
+    </details>
+  </div>
+</header>
+
+<script>
+  const details = document.querySelector<HTMLDetailsElement>('.doc-site-header .mobile-menu-details');
+
+  details?.querySelectorAll('a').forEach((link) => {
+    link.addEventListener('click', () => {
+      if (details) details.open = false;
+    });
+  });
+
+  document.addEventListener('keydown', (event) => {
+    if (event.key !== 'Escape' || !details?.open) return;
+    details.open = false;
+    details.querySelector<HTMLElement>('summary')?.focus();
+  });
+</script>

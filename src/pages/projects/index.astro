@@ -1,0 +1,68 @@
+---
+import DocumentLayout from '../../layouts/DocumentLayout.astro';
+import { projects } from '../../data/projects';
+---
+
+<DocumentLayout
+  title="Project Archive | THE HUMAN PROTOCOL"
+  description="Engineering project archive covering AI automation, 3D mathematical visualisation, and full-stack web applications."
+>
+  <article class="doc-page">
+    <header class="doc-hero">
+      <div class="section-index">
+        <span class="pixel-label">[ARCHIVE / SYSTEMS]</span>
+        <span class="section-index__rule" aria-hidden="true"></span>
+        <span class="micro-label">{projects.length} ENTRIES</span>
+      </div>
+      <h1 class="doc-title">
+        Project
+        <span class="accent-serif accent-word">archive.</span>
+      </h1>
+      <p class="doc-intro">
+        All listed projects reflect personal implementations, reported benchmarks where noted, and team
+        collaborations. Each case study documents architectural decisions, limitations, and verification
+        evidence rather than marketing summaries.
+      </p>
+    </header>
+
+    <div class="archive-list">
+      {projects.map((project, index) => (
+        <article class="archive-row">
+          <span class="archive-row__num" aria-hidden="true">{String(index + 1).padStart(2, '0')}</span>
+
+          <div>
+            <div class="archive-row__meta">
+              {project.category} / {project.status} · Updated {project.updatedAt}
+            </div>
+            <h2 class="archive-row__title">
+              <a href={`/projects/${project.slug}/`}>{project.title}</a>
+            </h2>
+            <p class="archive-row__summary">{project.summary}</p>
+            <ul class="tech-list" aria-label="Technologies">
+              {project.technologies.map((tech) => <li>{tech}</li>)}
+            </ul>
+            <ul class="archive-row__evidence">
+              {project.evidence.map((item) => <li>{item}</li>)}
+            </ul>
+          </div>
+
+          <div class="archive-row__actions">
+            <a href={`/projects/${project.slug}/`} class="button button--ink">
+              Read case study <span aria-hidden="true">→</span>
+            </a>
+            {project.repoUrl && (
+              <a
+                href={project.repoUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="button button--outline"
+              >
+                Source <span aria-hidden="true">↗</span>
+              </a>
+            )}
+          </div>
+        </article>
+      ))}
+    </div>
+  </article>
+</DocumentLayout>

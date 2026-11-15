@@ -1,0 +1,186 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { EditorialApp } from '../components/editorial/EditorialApp';
+import { profile } from '../data/profile';
+import { projects } from '../data/projects';
+---
+
+<BaseLayout
+  title="THE HUMAN PROTOCOL: Niko Rajani Syahputra"
+  description="Editorial engineering portfolio of Niko Rajani Syahputra: AI systems, data workflows, and selective old-web interface fragments."
+>
+  {/* V3 editorial interface with restrained retro fragments */}
+  <EditorialApp client:load />
+
+  {/* Accessible No-Script Semantic Fallback (FR-015, T-05) */}
+  <noscript>
+    <div class="noscript-container">
+      <header class="noscript-header">
+        <h1>{profile.name}</h1>
+        <p class="noscript-pill">{profile.focusPill}</p>
+        <p class="noscript-tagline">{profile.headline}</p>
+        <p>{profile.summary}</p>
+      </header>
+
+      <nav class="noscript-nav" aria-label="Portfolio Sections">
+        <a href="#projects-section" class="noscript-link">Jump to Projects</a>
+        <a href="#about-section" class="noscript-link">About & Experience</a>
+        <a href="#contact-section" class="noscript-link">Contact Channels</a>
+        <a href="/resume.pdf" class="noscript-link" target="_blank">Download Resume (PDF)</a>
+      </nav>
+
+      <section id="projects-section" class="noscript-section">
+        <h2>Engineering Projects</h2>
+        <div class="noscript-projects-grid">
+          {projects.map((proj) => (
+            <article class="noscript-card">
+              <h3>{proj.title}</h3>
+              <p><strong>Category:</strong> {proj.category} | <strong>Status:</strong> {proj.status}</p>
+              <p>{proj.summary}</p>
+              <p><strong>Technologies:</strong> {proj.technologies.join(', ')}</p>
+              <div class="noscript-links">
+                <a href={`/projects/${proj.slug}/`}>Read Full Case Study</a>
+                {proj.repoUrl && (
+                  <a href={proj.repoUrl} target="_blank" rel="noopener noreferrer">
+                    Source Code on GitHub
+                  </a>
+                )}
+              </div>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <section id="about-section" class="noscript-section">
+        <h2>About Developer</h2>
+        <h3>Education</h3>
+        {profile.education.map((edu) => (
+          <p>
+            <strong>{edu.degree}</strong> ({edu.period}): {edu.institution} {edu.gpa && `, GPA: ${edu.gpa}`}
+          </p>
+        ))}
+
+        <h3>Experience</h3>
+        {profile.experience.map((exp) => (
+          <div>
+            <h4>{exp.role}: {exp.organization} ({exp.period})</h4>
+            <ul>
+              {exp.responsibilities.map((r) => (
+                <li>{r}</li>
+              ))}
+            </ul>
+          </div>
+        ))}
+      </section>
+
+      <section id="contact-section" class="noscript-section">
+        <h2>Contact Channels</h2>
+        <p>Email: <a href={`mailto:${profile.email}`}>{profile.email}</a></p>
+        <p>LinkedIn: <a href={profile.linkedinUrl} target="_blank" rel="noopener noreferrer">{profile.linkedinUrl}</a></p>
+        <p>GitHub: <a href={profile.githubUrl} target="_blank" rel="noopener noreferrer">{profile.githubUrl}</a></p>
+        <p>CV Document: <a href="/resume.pdf" target="_blank" rel="noopener noreferrer">Download Verified Resume (PDF)</a></p>
+      </section>
+    </div>
+  </noscript>
+</BaseLayout>
+
+<style>
+  .noscript-container {
+    background: #f6f5f0;
+    color: #141b22;
+    padding: clamp(28px, 5vw, 64px) clamp(18px, 4vw, 56px);
+    max-width: 1080px;
+    margin: 0 auto;
+    font-family: var(--font-content);
+  }
+  .noscript-header {
+    border-bottom: 1px solid #d8d4c8;
+    padding-bottom: 22px;
+    margin-bottom: 26px;
+  }
+  .noscript-header h1 {
+    font-family: var(--font-display);
+    font-size: clamp(40px, 8vw, 88px);
+    line-height: 0.9;
+    letter-spacing: -0.05em;
+  }
+  .noscript-pill {
+    background: #efeee7;
+    color: #141b22;
+    padding: 5px 10px;
+    border: 1px solid #d8d4c8;
+    display: inline-block;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    margin: 12px 0;
+  }
+  .noscript-tagline {
+    font-family: var(--font-display);
+    font-size: clamp(18px, 2.4vw, 26px);
+    font-weight: 500;
+    line-height: 1.3;
+    margin-bottom: 10px;
+  }
+  .noscript-nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 18px;
+    margin-bottom: 34px;
+    padding: 14px 0;
+    border-bottom: 1px solid #d8d4c8;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .noscript-link {
+    font-weight: 600;
+    color: #0b3d91;
+    padding: 4px 0;
+  }
+  .noscript-section {
+    margin-bottom: 42px;
+    max-width: 75ch;
+  }
+  .noscript-section h2 {
+    font-family: var(--font-display);
+    font-size: clamp(28px, 4vw, 42px);
+    letter-spacing: -0.03em;
+    margin-bottom: 14px;
+    border-top: 1px solid #d8d4c8;
+    padding-top: 18px;
+  }
+  .noscript-section h3 {
+    font-family: var(--font-display);
+    font-size: 20px;
+    margin: 18px 0 8px;
+  }
+  .noscript-projects-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    margin-top: 12px;
+  }
+  .noscript-card {
+    background: #ffffff;
+    border: 1px solid #d8d4c8;
+    padding: 18px;
+  }
+  .noscript-card h3 {
+    margin-top: 0;
+    font-family: var(--font-display);
+    font-size: 20px;
+    letter-spacing: -0.02em;
+  }
+  .noscript-links {
+    margin-top: 12px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    text-transform: uppercase;
+  }
+</style>

@@ -1,0 +1,23 @@
+---
+import BaseLayout from './BaseLayout.astro';
+import DocumentHeader from '../components/DocumentHeader.astro';
+import DocumentFooter from '../components/DocumentFooter.astro';
+
+interface Props {
+  title: string;
+  description: string;
+}
+
+const { title, description } = Astro.props;
+---
+
+<BaseLayout title={title} description={description}>
+  <div class="site doc-site">
+    <a class="skip-link" href="#main-content">Skip to content</a>
+    <DocumentHeader />
+    <main id="main-content" class="doc-main">
+      <slot />
+    </main>
+    <DocumentFooter />
+  </div>
+</BaseLayout>

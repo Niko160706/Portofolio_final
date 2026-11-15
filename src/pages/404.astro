@@ -1,0 +1,109 @@
+---
+import DocumentLayout from '../layouts/DocumentLayout.astro';
+---
+
+<DocumentLayout
+  title="404: Route Not Found | THE HUMAN PROTOCOL"
+  description="The requested route does not exist in this portfolio archive."
+>
+  <article class="doc-page">
+    <header class="doc-hero">
+      <div class="section-index">
+        <span class="pixel-label">[SYSTEM / ERROR]</span>
+        <span class="section-index__rule" aria-hidden="true"></span>
+        <span class="micro-label">HTTP_404_NOT_FOUND</span>
+      </div>
+      <h1 class="doc-title">
+        Route not
+        <span class="accent-serif accent-word">found.</span>
+      </h1>
+      <p class="doc-intro">
+        The specified URL or resource could not be located in this portfolio archive. The destination
+        may have been renamed, archived, or never existed.
+      </p>
+    </header>
+
+    <div class="notfound-grid">
+      <div class="notfound-code" aria-hidden="true">404</div>
+      <div class="notfound-copy">
+        <span class="doc-tag">STATUS: ROUTE_UNRESOLVED</span>
+        <h2>Nothing was deleted.</h2>
+        <p>
+          Every project record, case study, and contact channel is linked from the index. Use the
+          archive below to find the document you were looking for.
+        </p>
+        <div class="notfound-actions">
+          <a href="/" class="button button--ink">Back to index <span aria-hidden="true">→</span></a>
+          <a href="/projects/" class="button button--outline">Project archive <span aria-hidden="true">→</span></a>
+          <a href="/contact/" class="button button--outline">Contact <span aria-hidden="true">→</span></a>
+        </div>
+        <pre class="notfound-log">STATUS: HTTP_404_NOT_FOUND
+ROUTE: UNRESOLVED
+RECOVERY: USE THE ARCHIVE OR CONTACT CHANNELS</pre>
+      </div>
+    </div>
+  </article>
+</DocumentLayout>
+
+<style>
+  .notfound-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+    gap: clamp(30px, 5vw, 70px);
+    align-items: start;
+    margin-top: clamp(36px, 5vw, 58px);
+  }
+
+  .notfound-code {
+    font-family: var(--font-display);
+    font-size: clamp(90px, 16vw, 220px);
+    font-weight: 700;
+    line-height: 0.8;
+    letter-spacing: -0.07em;
+    color: var(--accent);
+  }
+
+  .notfound-copy h2 {
+    margin: 14px 0 10px;
+    font-family: var(--font-display);
+    font-size: clamp(26px, 3vw, 38px);
+    font-weight: 600;
+    letter-spacing: -0.035em;
+  }
+
+  .notfound-copy p {
+    max-width: 54ch;
+    font-size: 15px;
+    line-height: 1.7;
+    color: var(--text-secondary);
+  }
+
+  .notfound-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 24px;
+  }
+
+  .notfound-log {
+    margin-top: 28px;
+    padding: 14px 16px;
+    background: #0d1117;
+    border: 1px solid #2b3744;
+    color: #9fb0c0;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    line-height: 1.7;
+    overflow-x: auto;
+  }
+
+  @media (max-width: 700px) {
+    .notfound-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .notfound-actions .button {
+      width: 100%;
+    }
+  }
+</style>

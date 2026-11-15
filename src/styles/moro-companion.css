@@ -1,0 +1,352 @@
+/* MORO's transparent raster sprite sits beside the editorial content as one persistent control. */
+.hero-main {
+  position: relative;
+}
+
+.hero-moro-anchor {
+  position: absolute;
+  z-index: 0;
+  top: 42%;
+  right: clamp(-210px, -14vw, -120px);
+  display: block;
+  width: 136px;
+  height: 148px;
+  pointer-events: none;
+}
+
+.moro-companion {
+  position: fixed;
+  z-index: 900;
+  top: 0;
+  left: 0;
+  width: 136px;
+  pointer-events: none;
+  opacity: 0;
+  transform: translate3d(0, 0, 0);
+  transform-origin: top left;
+  contain: layout style;
+}
+
+.moro-companion[data-positioned='true'] {
+  opacity: 1;
+}
+
+.moro-companion[data-transition='true'] {
+  will-change: transform;
+}
+
+.moro-companion__motion {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 136px;
+  height: 147.34px;
+  transform: translate3d(0, 0, 0) rotate(0deg) scale(1);
+  transform-origin: 50% 50%;
+  pointer-events: none;
+}
+
+.moro-companion[data-transition='true'] .moro-companion__motion {
+  will-change: transform;
+}
+
+.moro-companion__trigger {
+  display: block;
+  width: 100%;
+  min-height: 0;
+  padding: 0;
+  overflow: visible;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: inherit;
+  pointer-events: auto;
+  cursor: grab;
+  touch-action: none;
+}
+
+.moro-companion[data-movement-enabled='false'] .moro-companion__trigger {
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+.moro-companion__trigger:hover {
+  background: transparent;
+}
+
+.moro-companion__trigger:active {
+  transform: none;
+  cursor: grabbing;
+}
+
+.moro-companion__trigger:active canvas {
+  transform: scale(.97);
+}
+
+.moro-companion__trigger:focus-visible {
+  outline: 2px solid var(--success);
+  outline-offset: 7px;
+  border-radius: 48%;
+}
+
+.moro-companion__trigger canvas {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 192 / 208;
+  filter: drop-shadow(0 7px 8px rgb(22 29 21 / 12%));
+}
+
+.moro-companion__greeting,
+.moro-companion__dialogue {
+  position: absolute;
+  right: 0;
+  bottom: calc(100% + 13px);
+  width: min(290px, calc(100vw - 32px));
+  max-height: calc(100dvh - 160px);
+  overflow: auto;
+  color: var(--ink);
+  background: var(--surface);
+  border: 1px solid var(--border-soft);
+  border-radius: 16px;
+  box-shadow: 0 10px 28px rgb(17 17 17 / 10%);
+  text-align: left;
+  pointer-events: auto;
+}
+
+.moro-companion[data-mode='visualize'] .moro-companion__greeting,
+.moro-companion[data-mode='visualize'] .moro-companion__dialogue {
+  right: calc(100% + 14px);
+  bottom: 0;
+  width: min(280px, calc(100vw - 130px));
+}
+
+/* The hero anchor can sit high enough that a 430px dialogue would clip above
+   the viewport. On wider screens, place the dialogue beside the character and
+   center it vertically. Mobile keeps the compact above-trigger layout. */
+@media (min-width: 700px) {
+  .moro-companion[data-mode='hero'] .moro-companion__dialogue,
+  .moro-companion[data-mode='visualize'] .moro-companion__dialogue {
+    right: calc(100% + 14px);
+    bottom: auto;
+    top: 50%;
+    transform: translateY(-50%);
+    max-height: calc(100dvh - 32px);
+  }
+}
+
+.moro-companion__greeting {
+  display: flex;
+  width: min(210px, calc(100vw - 32px));
+  min-height: 48px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 9px 10px 9px 15px;
+  font-size: 14px;
+  line-height: 1.45;
+}
+
+.moro-companion__dialogue {
+  padding: 16px;
+}
+
+.moro-companion__dialogue-head {
+  display: flex;
+  min-height: 34px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: .05em;
+  text-transform: uppercase;
+}
+
+.moro-companion__dialogue-head > span::before {
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  margin-right: 8px;
+  border-radius: 50%;
+  background: var(--success);
+  content: '';
+  vertical-align: 1px;
+}
+
+.moro-companion__dialogue button,
+.moro-companion__greeting button,
+.moro-companion__enable {
+  min-height: 44px;
+  border: 1px solid var(--border-soft);
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--ink);
+  font: inherit;
+  cursor: pointer;
+}
+
+.moro-companion__dialogue-head button,
+.moro-companion__greeting button {
+  display: inline-grid;
+  width: 44px;
+  min-height: 44px;
+  flex: 0 0 44px;
+  place-items: center;
+  padding: 0;
+  font-size: 20px;
+  line-height: 1;
+}
+
+.moro-companion__message {
+  margin: 12px 0 15px;
+  font-size: 16px;
+  line-height: 1.55;
+}
+
+.moro-companion__links,
+.moro-companion__settings {
+  display: grid;
+  gap: 7px;
+}
+
+.moro-companion__links button {
+  padding: 9px 13px;
+  text-align: left;
+  font-size: 13px;
+}
+
+.moro-companion__links button:hover,
+.moro-companion__settings button:hover,
+.moro-companion__dialogue-head button:hover,
+.moro-companion__greeting button:hover,
+.moro-companion__enable:hover {
+  background: var(--surface-2);
+}
+
+.moro-companion__dialogue button:active,
+.moro-companion__greeting button:active,
+.moro-companion__enable:active {
+  transform: translateY(1px);
+}
+
+.moro-companion__settings {
+  grid-template-columns: 1fr 1fr;
+  margin-top: 12px;
+}
+
+.moro-companion__settings button,
+.moro-companion__inspect {
+  padding: 8px 10px;
+  font-size: 12px;
+  line-height: 1.35;
+}
+
+.moro-companion__inspect {
+  width: 100%;
+  margin-top: 8px;
+}
+
+.moro-companion__note {
+  margin-top: 10px;
+  color: var(--ink-2);
+  font-size: 12px;
+  line-height: 1.55;
+}
+
+.moro-companion__fallback,
+.moro-companion__error {
+  position: absolute;
+  right: 0;
+  bottom: calc(100% + 10px);
+  padding: 5px 8px;
+  border: 1px solid var(--border-soft);
+  border-radius: 8px;
+  background: var(--surface);
+  color: var(--ink-2);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+.moro-companion__error {
+  bottom: calc(100% + 9px);
+  color: var(--anomaly);
+}
+
+.moro-companion__enable {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  padding: 8px 13px;
+  font-size: 13px;
+  pointer-events: auto;
+}
+
+.moro-companion__safe-area {
+  position: fixed;
+  right: 0;
+  bottom: 0;
+  width: env(safe-area-inset-right);
+  height: env(safe-area-inset-bottom);
+  visibility: hidden;
+  pointer-events: none;
+}
+
+@media (max-width: 1120px) {
+  .hero-moro-anchor {
+    position: relative;
+    top: auto;
+    right: auto;
+    width: 98px;
+    height: 106px;
+    margin: 10px 0 0 auto;
+  }
+}
+
+@media (max-width: 600px) {
+  .hero-moro-anchor {
+    width: 88px;
+    height: 96px;
+    margin-top: 5px;
+  }
+
+  .moro-companion__greeting,
+  .moro-companion__dialogue {
+    width: min(286px, calc(100vw - 32px));
+    max-height: calc(100dvh - 138px);
+  }
+
+  .moro-companion__greeting {
+    width: min(205px, calc(100vw - 32px));
+  }
+
+  .moro-companion[data-mode='visualize'] .moro-companion__greeting,
+  .moro-companion[data-mode='visualize'] .moro-companion__dialogue {
+    right: calc(100% + 8px);
+    bottom: 0;
+    width: min(250px, calc(100vw - 118px));
+    max-height: 230px;
+  }
+
+  /* On narrow screens the above-trigger layout fits better than a side panel. */
+  .moro-companion[data-mode='visualize'] .moro-companion__dialogue {
+    right: 0;
+    bottom: calc(100% + 10px);
+    top: auto;
+    left: auto;
+    width: min(286px, calc(100vw - 32px));
+    max-height: calc(100dvh - 138px);
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .moro-companion__trigger:active canvas,
+  .moro-companion__dialogue button:active,
+  .moro-companion__greeting button:active,
+  .moro-companion__enable:active {
+    transform: none !important;
+  }
+}

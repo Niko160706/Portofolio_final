@@ -1,0 +1,269 @@
+@import './tokens.css';
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--ink);
+  background-color: var(--bg);
+  font-family: var(--font-content);
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: clip;
+  overflow-y: auto;
+  scroll-behavior: smooth;
+  scroll-padding-top: 84px;
+}
+
+body {
+  min-height: 100vh;
+  min-height: 100dvh;
+  background-color: var(--bg);
+  color: var(--ink);
+  position: relative;
+}
+
+:focus-visible {
+  outline: 3px solid var(--focus) !important;
+  outline-offset: 2px !important;
+}
+
+.contact-band :focus-visible,
+.doc-footer :focus-visible,
+.anomaly-note :focus-visible,
+.utility-backdrop :focus-visible {
+  outline-color: #8fb0ff !important;
+}
+
+a,
+button,
+summary,
+select,
+[role="button"],
+[role="tab"] {
+  cursor: pointer;
+}
+
+button:disabled,
+a[aria-disabled="true"] {
+  cursor: not-allowed;
+  opacity: 0.65;
+}
+
+a {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+a:hover {
+  color: var(--accent);
+}
+
+::selection {
+  background: #dfe6ff;
+  color: var(--ink);
+}
+
+/* Small retro label. Silkscreen only, never body copy. */
+.bitmap-label {
+  font-family: var(--font-bitmap);
+  font-size: 10px;
+  font-weight: 400;
+  letter-spacing: 0.04em;
+  line-height: 1.4;
+  text-transform: uppercase;
+}
+
+/* Technical metadata. IBM Plex Mono. */
+.mono-label,
+.pixel-label,
+.micro-label {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 400;
+  letter-spacing: 0.04em;
+  line-height: 1.45;
+  text-transform: uppercase;
+  color: var(--ink-2);
+}
+
+.retro-text {
+  font-family: var(--font-retro);
+  font-size: 18px;
+  line-height: 1.25;
+}
+
+.mono-text {
+  font-family: var(--font-mono);
+}
+
+.display-heading {
+  font-family: var(--font-display);
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  line-height: 0.96;
+}
+
+/* Compatibility class: V3 uses color as the accent, not a serif face. */
+.accent-serif,
+.serif-accent {
+  font-family: var(--font-display);
+  font-style: normal;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  color: var(--accent);
+}
+
+/* Retro fragment primitives. Used only inside small utility boxes. */
+.bevel-outset {
+  border-top: 1px solid rgba(255, 255, 255, 0.85);
+  border-left: 1px solid rgba(255, 255, 255, 0.85);
+  border-right: 1px solid rgba(0, 0, 0, 0.28);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.28);
+  box-shadow: var(--retro-inset);
+}
+
+.bevel-inset {
+  border-top: 1px solid rgba(0, 0, 0, 0.26);
+  border-left: 1px solid rgba(0, 0, 0, 0.26);
+  border-right: 1px solid rgba(255, 255, 255, 0.75);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.75);
+  box-shadow: inset 1px 1px 0 rgba(0, 0, 0, 0.08);
+}
+
+.bevel-button {
+  min-height: 32px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border: 1px solid var(--retro-border);
+  background: var(--retro-bg-2);
+  box-shadow: var(--retro-inset);
+  color: var(--ink);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  line-height: 1.2;
+  text-decoration: none;
+}
+
+.bevel-button:hover {
+  background: #ffffff;
+  color: var(--accent);
+}
+
+.bevel-button:active {
+  box-shadow: inset 1px 1px 0 rgba(0, 0, 0, 0.16);
+  transform: translateY(1px);
+}
+
+/* Skip link */
+.skip-link {
+  position: fixed;
+  top: 8px;
+  left: 8px;
+  z-index: 4000;
+  padding: 10px 14px;
+  transform: translateY(-160%);
+  background: var(--ink);
+  color: #ffffff;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  text-decoration: none;
+}
+
+.skip-link:focus {
+  transform: translateY(0);
+  color: #ffffff;
+}
+
+/* No-script fallback */
+.noscript-container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 48px var(--gutter);
+}
+
+.noscript-header h1 {
+  font-family: var(--font-display);
+  font-size: clamp(40px, 8vw, 84px);
+  letter-spacing: -0.04em;
+  line-height: 0.95;
+}
+
+.noscript-pill {
+  margin: 12px 0;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  text-transform: uppercase;
+}
+
+.noscript-tagline {
+  font-size: 20px;
+  margin-bottom: 12px;
+}
+
+.noscript-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 22px;
+  margin: 28px 0;
+  font-family: var(--font-mono);
+  font-size: 13px;
+}
+
+.noscript-section {
+  margin-top: 44px;
+  border-top: 1px solid var(--border-strong);
+  padding-top: 20px;
+}
+
+.noscript-section h2 {
+  font-family: var(--font-display);
+  font-size: 32px;
+  margin-bottom: 18px;
+}
+
+.noscript-projects-grid {
+  display: grid;
+  gap: 18px;
+}
+
+.noscript-card {
+  border: 1px solid var(--border-soft);
+  padding: 18px;
+}
+
+.noscript-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 10px;
+}
+
+.noscript-container > * + * {
+  margin-top: 14px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

@@ -1,0 +1,186 @@
+---
+import DocumentLayout from '../layouts/DocumentLayout.astro';
+import { profile } from '../data/profile';
+---
+
+<DocumentLayout
+  title="About Niko Rajani Syahputra | THE HUMAN PROTOCOL"
+  description="Academic background, leadership experience, technical competencies, awards, and published certifications of Niko Rajani Syahputra."
+>
+  <article class="doc-page">
+    <header class="doc-hero">
+      <div class="section-index">
+        <span class="pixel-label">[ABOUT / DOSSIER]</span>
+        <span class="section-index__rule" aria-hidden="true"></span>
+        <span class="micro-label">PROFILE.DAT</span>
+      </div>
+      <h1 class="doc-title">
+        About
+        <span class="accent-serif accent-word">Niko.</span>
+      </h1>
+      <p class="doc-intro">{profile.headline}</p>
+    </header>
+
+    <div class="doc-grid">
+      <aside class="doc-aside">
+        <div class="retro-box doc-property-box">
+          <div class="fragment-head">
+            <span class="bitmap-label">Profile.dat</span>
+            <span class="mono-label">Owner data</span>
+          </div>
+          <div class="profile-initials" aria-hidden="true">NRS</div>
+          <dl class="fragment-rows">
+            <div><dt>Name</dt><dd>{profile.fullName}</dd></div>
+            <div><dt>Role</dt><dd>Informatics student / builder</dd></div>
+            <div><dt>Base</dt><dd>{profile.location}</dd></div>
+            <div><dt>GPA</dt><dd>3.86 / 4.00</dd></div>
+            <div><dt>Seeking</dt><dd>Data Engineering internship, Semester 6</dd></div>
+          </dl>
+          <p class="retro-note">Owner-provided record. Last updated 2026.11.</p>
+        </div>
+      </aside>
+
+      <div class="doc-body">
+        <p class="doc-lead" lang="id">{profile.summary}</p>
+
+        <div class="doc-callout">
+          <strong>Currently seeking:</strong> a Data Engineering internship for Semester 6: data pipelines,
+          retrieval systems, and interfaces that make technical work inspectable.
+        </div>
+
+        <section class="doc-section" aria-labelledby="page-experience-title">
+          <div class="doc-section-head">
+            <span class="pixel-label">[EXPERIENCE]</span>
+            <span class="doc-section-head__rule" aria-hidden="true"></span>
+          </div>
+          <h2 id="page-experience-title" class="doc-section-title">Leadership &amp; practice</h2>
+
+          {profile.experience.map((exp, index) => (
+            <article class="timeline-row">
+              <span class="timeline-row__index">{String(index + 1).padStart(2, '0')}</span>
+              <div class="timeline-row__main">
+                <h3>{exp.role}</h3>
+                <p class="timeline-row__org">{exp.organization}</p>
+                <ul class="timeline-row__list" lang="id">
+                  {exp.responsibilities.map((item) => <li>{item}</li>)}
+                </ul>
+              </div>
+              <div class="timeline-row__meta">
+                <span>{exp.period}</span>
+                <span>{exp.location}</span>
+              </div>
+            </article>
+          ))}
+        </section>
+
+        <section class="doc-section" aria-labelledby="page-education-title">
+          <div class="doc-section-head">
+            <span class="pixel-label">[EDUCATION]</span>
+            <span class="doc-section-head__rule" aria-hidden="true"></span>
+          </div>
+          <h2 id="page-education-title" class="doc-section-title">Academic timeline</h2>
+
+          {profile.education.map((edu) => (
+            <article class="education-row">
+              <span class="education-row__period">{edu.period}</span>
+              <div class="education-row__main">
+                <h3>{edu.degree}, {edu.institution}</h3>
+                <p lang="id">{edu.details}</p>
+                {edu.gpa && <span class="education-row__gpa">GPA {edu.gpa}</span>}
+              </div>
+            </article>
+          ))}
+        </section>
+
+        <section class="doc-section" aria-labelledby="page-capabilities-title">
+          <div class="doc-section-head">
+            <span class="pixel-label">[CAPABILITIES]</span>
+            <span class="doc-section-head__rule" aria-hidden="true"></span>
+          </div>
+          <h2 id="page-capabilities-title" class="doc-section-title">Technical competencies</h2>
+
+          <div class="skill-matrix">
+            {profile.skillCategories.map((category) => (
+              <div class="skill-row">
+                <h3>{category.category}</h3>
+                <ul>
+                  {category.skills.map((skill) => <li>{skill}</li>)}
+                </ul>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        <section class="doc-section" aria-labelledby="page-recognition-title">
+          <div class="doc-section-head">
+            <span class="pixel-label">[RECOGNITION]</span>
+            <span class="doc-section-head__rule" aria-hidden="true"></span>
+          </div>
+          <h2 id="page-recognition-title" class="doc-section-title">Awards &amp; certifications</h2>
+
+          <div class="recognition-grid">
+            <div>
+              <h3 class="recognition-subtitle">Competitions</h3>
+              {profile.awards.map((award) => (
+                <div class="award-row">
+                  <span class="award-row__year">{award.year}</span>
+                  <div>
+                    <p class="award-row__title">{award.title}</p>
+                    <p class="award-row__detail" lang="id">{award.details}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <div>
+              <h3 class="recognition-subtitle">Certifications</h3>
+              {profile.certifications.map((cert) => (
+                <div class="cert-row">
+                  <a href={cert.url} target="_blank" rel="noopener noreferrer" class="cert-row__link">
+                    {cert.name} <span aria-hidden="true">↗</span>
+                  </a>
+                  <p class="cert-row__meta">{cert.issuer} · ID {cert.credentialId}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <div class="doc-section doc-actions">
+          <a href="/projects/" class="button button--ink">Explore case studies <span aria-hidden="true">→</span></a>
+          <a href="/resume.pdf" target="_blank" rel="noopener noreferrer" class="button button--outline">Download CV <span aria-hidden="true">↓</span></a>
+          <a href="/contact/" class="button button--outline">Contact <span aria-hidden="true">→</span></a>
+        </div>
+      </div>
+    </div>
+  </article>
+</DocumentLayout>
+
+<style>
+  .doc-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    padding-top: 28px;
+    border-top: 1px solid var(--border-subtle);
+  }
+
+  .education-row__main h3 {
+    font-family: var(--font-display);
+    font-size: 17px;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    line-height: 1.25;
+  }
+
+  .education-row__gpa {
+    display: inline-block;
+    margin-top: 8px;
+  }
+
+  @media (max-width: 700px) {
+    .doc-actions .button {
+      width: 100%;
+    }
+  }
+</style>

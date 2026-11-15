@@ -1,0 +1,28 @@
+---
+import { profile } from '../data/profile';
+---
+
+<footer class="doc-footer">
+  <div class="container doc-footer-inner">
+    <p class="bitmap-label doc-footer-label">Contact / document</p>
+    <h2 class="doc-footer-title">
+      Let&apos;s build something <span class="doc-footer-accent">useful.</span>
+    </h2>
+
+    <div class="doc-footer-grid">
+      <div class="doc-footer-links">
+        <a href="/#work">Work <span aria-hidden="true">→</span></a>
+        <a href="/#lab">Lab <span aria-hidden="true">→</span></a>
+        <a href="/#about">About <span aria-hidden="true">→</span></a>
+        <a href="/resume.pdf" target="_blank" rel="noopener noreferrer">Resume (PDF) <span aria-hidden="true">↓</span></a>
+        <a href={profile.githubUrl} target="_blank" rel="noopener noreferrer">GitHub <span aria-hidden="true">↗</span></a>
+        <a href={profile.linkedinUrl} target="_blank" rel="noopener noreferrer">LinkedIn <span aria-hidden="true">↗</span></a>
+      </div>
+      <a href="/contact/" class="btn btn--light">Contact channels</a>
+    </div>
+
+    <p class="doc-footer-legal">
+      © 2026 Niko Rajani Syahputra / Built with Astro / fictional artifacts labelled
+    </p>
+  </div>
+</footer>

@@ -1,0 +1,47 @@
+# Dependencies and generated output
+node_modules/
+dist/
+.astro/
+.cache/
+coverage/
+*.tsbuildinfo
+*.log
+
+# Local tooling, browser profiles, and QA scratch data
+.opencode/
+.qodo/
+.agents/
+.chrome-*/
+.edge-qa/
+artifacts/
+playwright-report/
+test-results/
+
+# Planning, instructions, and reports (README.md is intentionally tracked)
+docs/
+README_START_HERE.md
+01_ALTER_EXPERIENCE_SRS.md
+02_VISUAL_MOTION_AND_NARRATIVE_DESIGN.md
+03_DEEPSEEK_BATCH_RUNBOOK.md
+DESIGN.md
+DELIVERY_GATE.md
+IMPLEMENTATION_REPORT.md
+REFERENCE_REFINEMENT_REPORT.md
+AGENTS.md
+AGENTS_V2.md
+SRS_Human_Protocol_Portfolio_v1.md
+
+# Source/reference images are not runtime code.
+# Keep only the two approved Alter visual references for B2.
+assets/*
+!assets/reference/
+assets/reference/*
+!assets/reference/refrensi1.jpg
+!assets/reference/refrence_glitch2.png
+character-playground/
+
+# Python caches and OS/editor noise
+__pycache__/
+*.py[cod]
+.DS_Store
+Thumbs.db

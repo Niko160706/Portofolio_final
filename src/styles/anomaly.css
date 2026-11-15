@@ -1,0 +1,164 @@
+/* V3 anomaly note: small embedded old-web utility dialog, not an OS window. */
+
+.anomaly-note {
+  position: fixed;
+  right: 22px;
+  bottom: 22px;
+  z-index: 3000;
+  width: min(360px, calc(100vw - 32px));
+  max-height: min(70dvh, 520px);
+  overflow-y: auto;
+  padding: 0;
+  border: 1px solid #1e1e1e;
+  background: #ecece8;
+  color: #111111;
+  box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.18);
+}
+
+.anomaly-note:focus {
+  outline: 3px solid #2d5bff;
+  outline-offset: 3px;
+}
+
+.anomaly-note-head {
+  min-height: 28px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 5px 8px;
+  border-bottom: 1px solid #1e1e1e;
+  background: #d8d8d0;
+}
+
+.anomaly-note-head .bitmap-label {
+  color: #8b1e2d;
+  font-size: 10px;
+}
+
+.anomaly-id {
+  margin-left: auto;
+  font-family: var(--font-bitmap);
+  font-size: 10px;
+  color: #8b1e2d;
+}
+
+.anomaly-close {
+  width: 18px;
+  height: 18px;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border: 1px solid #1e1e1e;
+  background: #c8c8be;
+  color: #111111;
+  font-family: var(--font-bitmap);
+  font-size: 10px;
+  line-height: 1;
+  cursor: pointer;
+  box-shadow: inset 1px 1px 0 rgba(255, 255, 255, 0.7), inset -1px -1px 0 rgba(0, 0, 0, 0.12);
+}
+
+.anomaly-close:hover {
+  background: #ffffff;
+  color: #2d5bff;
+}
+
+.anomaly-close:focus-visible {
+  outline: 3px solid #2d5bff;
+  outline-offset: 2px;
+}
+
+.anomaly-heading {
+  margin: 0;
+  padding: 10px 12px 0;
+  font-family: var(--font-bitmap);
+  font-size: 10px;
+  letter-spacing: 0.04em;
+  line-height: 1.4;
+  text-transform: uppercase;
+  color: #8b1e2d;
+}
+
+.anomaly-body {
+  margin: 0;
+  padding: 6px 12px 10px;
+  font-family: var(--font-retro);
+  font-size: 18px;
+  line-height: 1.3;
+  color: #111111;
+}
+
+.anomaly-detail {
+  margin: 0 12px 10px;
+  padding: 6px 8px;
+  border: 1px dotted #8b1e2d;
+  background: #f7e9eb;
+  font-family: var(--font-retro);
+  font-size: 16px;
+  line-height: 1.5;
+  color: #5a5a5a;
+}
+
+.diagnostics-terminal {
+  margin: 6px 12px 10px;
+  padding: 10px;
+  border: 1px solid #1e1e1e;
+  background: #111111;
+  color: #e9e9e9;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  line-height: 1.6;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.anomaly-foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px 14px;
+  padding: 8px 12px;
+  border-top: 1px solid #1e1e1e;
+  background: #ecece8;
+}
+
+.anomaly-foot .mono-label {
+  font-size: 9px;
+  color: #5a5a5a;
+}
+
+.anomaly-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.anomaly-actions .text-button {
+  font-family: var(--font-bitmap);
+  font-size: 10px;
+  color: #111111;
+  text-decoration: underline;
+}
+
+.anomaly-actions .retro-action {
+  min-height: 28px;
+  padding: 4px 8px;
+  font-family: var(--font-bitmap);
+  font-size: 10px;
+}
+
+@media (max-width: 700px) {
+  .anomaly-note {
+    right: 8px;
+    bottom: 8px;
+    width: calc(100vw - 16px);
+    max-height: 74dvh;
+  }
+
+  .anomaly-close,
+  .anomaly-actions .retro-action,
+  .anomaly-actions .text-button {
+    min-height: 44px;
+  }
+}

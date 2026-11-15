@@ -1,0 +1,67 @@
+:root {
+  /* V3 editorial palette */
+  --bg: #fafaf7;
+  --surface: #ffffff;
+  --surface-2: #f1f1ec;
+  --ink: #111111;
+  --ink-2: #5a5a5a;
+  --ink-3: #7a7a7a;
+  --border-strong: #1e1e1e;
+  --border-soft: #d9d9d0;
+  --accent: #2d5bff;
+  --accent-ink: #1e43c9;
+  --success: #1e8e5a;
+  --anomaly: #8b1e2d;
+  --anomaly-soft: #f7e9eb;
+  --focus: #2d5bff;
+
+  /* Retro fragment surfaces. These are accents, not the page shell. */
+  --retro-bg: #d8d8d0;
+  --retro-bg-2: #ecece8;
+  --retro-border: #1e1e1e;
+  --retro-inset: inset 1px 1px 0 rgba(255, 255, 255, 0.75),
+    inset -1px -1px 0 rgba(0, 0, 0, 0.12);
+
+  /* Compatibility aliases for document pages and older content styles */
+  --bg-canvas: var(--bg);
+  --bg-surface: var(--surface);
+  --bg-surface-muted: var(--surface-2);
+  --bg-dark: var(--ink);
+  --bg-dark-surface: #1b1b1b;
+  --text-primary: var(--ink);
+  --text-secondary: var(--ink-2);
+  --text-muted: var(--ink-3);
+  --text-on-dark: #ffffff;
+  --border-subtle: var(--border-soft);
+  --border-dark: rgba(255, 255, 255, 0.24);
+  --accent-editorial: var(--accent);
+  --accent-highlight: var(--accent);
+  --focus-ring: var(--focus);
+  --content-ink: var(--ink);
+  --muted-ink: var(--ink-2);
+  --content-bg: var(--surface);
+
+  /* Legacy names used by some document CSS. They now map to V3 values. */
+  --paper: var(--bg);
+  --paper-2: var(--surface-2);
+  --card: var(--surface);
+  --line: var(--border-soft);
+  --sticky: #f3e7a1;
+  --start-green: var(--success);
+
+  /* Typography */
+  --font-display: "Inter", "Segoe UI", Arial, sans-serif;
+  --font-content: "Inter", "Segoe UI", Arial, sans-serif;
+  --font-mono: "IBM Plex Mono", Consolas, monospace;
+  --font-bitmap: "Silkscreen", "Courier New", monospace;
+  --font-retro: "VT323", "Courier New", monospace;
+  --font-shell: var(--font-content);
+  --font-pixel: var(--font-bitmap);
+  --font-serif: var(--font-display);
+
+  /* Layout and elevation */
+  --page: 1440px;
+  --gutter: clamp(18px, 3.4vw, 52px);
+  --shadow-note: 0 12px 32px rgba(20, 20, 20, 0.1);
+  --shadow-preview: 0 18px 48px rgba(20, 20, 20, 0.08);
+}
