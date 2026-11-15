@@ -29,12 +29,18 @@ export function AlterFractureLab({ initialIntensity }: AlterFractureLabProps) {
   const [intensity, setIntensity] = useState<FractureIntensity>(initialIntensity);
   const [visible, setVisible] = useState(true);
   const [reduced, setReduced] = useState(false);
+  const [osReduced, setOsReduced] = useState(false);
   const [runId, setRunId] = useState(0);
 
   useEffect(() => {
     const preference = window.matchMedia('(prefers-reduced-motion: reduce)');
     setReduced(preference.matches);
-    const onChange = (event: MediaQueryListEvent) => setReduced(event.matches);
+    setOsReduced(preference.matches);
+    const onChange = (event: MediaQueryListEvent) => {
+      setReduced(event.matches);
+      setOsReduced(event.matches);
+      setRunId((value) => value + 1);
+    };
     preference.addEventListener('change', onChange);
     return () => preference.removeEventListener('change', onChange);
   }, []);
@@ -163,8 +169,17 @@ export function AlterFractureLab({ initialIntensity }: AlterFractureLabProps) {
         <div className="alter-fracture__controls-row">
           <button type="button" onClick={replay}>Replay</button>
           <button type="button" onClick={() => setVisible(false)}>Hide</button>
-          <button type="button" aria-pressed={reduced} onClick={() => setReduced((value) => !value)}>
-            Motion: {reduced ? 'Off' : 'On'}
+          <button
+            type="button"
+            aria-pressed={reduced}
+            disabled={osReduced}
+            title={osReduced ? 'System reduced-motion preference is active' : undefined}
+            onClick={() => {
+              setReduced((value) => !value);
+              setRunId((value) => value + 1);
+            }}
+          >
+            Motion: {osReduced ? 'OS Off' : reduced ? 'Off' : 'On'}
           </button>
         </div>
         <p>QA only. Static SVG fallback when motion is reduced.</p>

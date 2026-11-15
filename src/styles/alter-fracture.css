@@ -182,6 +182,11 @@
   }
 }
 
+.alter-fracture__controls button:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
 .alter-fracture__controls {
   position: fixed;
   right: 18px;
