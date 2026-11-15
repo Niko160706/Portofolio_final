@@ -21,6 +21,16 @@ import { MoroCompanion, type MoroCompanionHandle } from '../v3/MoroCompanion';
 import { UtilityDialog } from '../v3/UtilityDialog';
 import { SettingsPanel } from '../v3/SettingsPanel';
 import { AnomalyMessage } from '../narrative/AnomalyMessage';
+import { AlterDebugPanel } from '../alter/AlterDebugPanel';
+import { useAlterExperience } from '../../lib/alter/useAlterExperience';
+import { shouldShowAlterDebug } from '../../lib/alter/alterDebug';
+import {
+  archiveNoteEvent,
+  moroActionEvent,
+  researchCompletedEvent,
+  researchInspectEvent,
+  visualizeCommittedEvent
+} from '../../lib/alter/alterBridge';
 import type { VectorDemoEvent } from '../v3/VectorDemo';
 
 const prefersReducedMotion = () =>
@@ -29,6 +39,19 @@ const prefersReducedMotion = () =>
 const scrollBehavior = () => (prefersReducedMotion() ? 'auto' : 'smooth');
 
 export const EditorialApp: React.FC = () => {
+  const alter = useAlterExperience();
+  const [showAlterDebug, setShowAlterDebug] = useState(false);
+
+  useEffect(() => {
+    setShowAlterDebug(
+      shouldShowAlterDebug({
+        dev: import.meta.env.DEV,
+        mode: import.meta.env.MODE,
+        search: window.location.search
+      })
+    );
+  }, []);
+
   const [narrative, dispatchNarrative] = useReducer(
     narrativeReducer,
     undefined,
@@ -86,6 +109,7 @@ export const EditorialApp: React.FC = () => {
   }, []);
 
   const handleInspectAssistant = () => {
+    alter.dispatch(moroActionEvent('inspect-signal'));
     dispatchNarrative({ type: 'ASSISTANT_INSPECT_CLICKED' });
     if (narrative.effectsEnabled) {
       setTimeout(() => dispatchNarrative({ type: 'ANIMATION_COMPLETED' }), 500);
@@ -93,6 +117,7 @@ export const EditorialApp: React.FC = () => {
   };
 
   const handleInspectTrace = () => {
+    alter.dispatch(researchInspectEvent('trace-04'));
     dispatchNarrative({ type: 'RESEARCH_TRACE_INSPECTED', projectId: 'deep-research' });
     if (narrative.effectsEnabled) {
       setTimeout(() => dispatchNarrative({ type: 'ANIMATION_COMPLETED' }), 400);
@@ -101,9 +126,13 @@ export const EditorialApp: React.FC = () => {
 
   const handleResearchStart = () => moroRef.current?.play('running');
   const handleResearchPause = () => moroRef.current?.setIdleState('idle');
-  const handleResearchComplete = () => moroRef.current?.playOnce('review', 'idle');
+  const handleResearchComplete = () => {
+    alter.dispatch(researchCompletedEvent('research', true));
+    moroRef.current?.playOnce('review', 'idle');
+  };
   const handleResearchReset = () => moroRef.current?.setIdleState('idle');
   const handleVectorInteraction = (event: VectorDemoEvent) => {
+    alter.dispatch(visualizeCommittedEvent(event));
     setVisualizeContext((context) => ({ previous: context.current, current: event }));
     if (event.type === 'reset') moroRef.current?.respond("Back to our starting point!", 'jumping');
     else if (event.type === 'preset' && event.preset === 'Identity') moroRef.current?.respond('Identity leaves every component exactly where it started.', 'review');
@@ -118,6 +147,7 @@ export const EditorialApp: React.FC = () => {
   };
 
   const handleOpenHiddenLog = () => {
+    alter.dispatch(archiveNoteEvent('observer-log'));
     dispatchNarrative({ type: 'HIDDEN_LOG_OPENED' });
     if (narrative.effectsEnabled) {
       setTimeout(() => dispatchNarrative({ type: 'ANIMATION_COMPLETED' }), 400);
@@ -231,6 +261,16 @@ export const EditorialApp: React.FC = () => {
             }}
           />
         </UtilityDialog>
+      )}
+
+      {showAlterDebug && (
+        <AlterDebugPanel
+          state={alter.state}
+          dispatch={alter.dispatch}
+          eventLog={alter.eventLog}
+          reset={alter.reset}
+          hydrated={alter.hydrated}
+        />
       )}
     </div>
   );
