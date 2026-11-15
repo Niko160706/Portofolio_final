@@ -23,6 +23,7 @@ import { SettingsPanel } from '../v3/SettingsPanel';
 import { AnomalyMessage } from '../narrative/AnomalyMessage';
 import { AlterDebugPanel } from '../alter/AlterDebugPanel';
 import { AlterFractureLab, type FractureIntensity } from '../alter/AlterFractureLab';
+import { AlterTerminal } from '../alter/AlterTerminal';
 import { useAlterExperience } from '../../lib/alter/useAlterExperience';
 import { shouldShowAlterDebug } from '../../lib/alter/alterDebug';
 import { canDiscoverClue } from '../../lib/alter/alterMachine';
@@ -95,6 +96,22 @@ export const EditorialApp: React.FC = () => {
   useEffect(() => () => {
     if (clueFlashTimer.current !== null) window.clearTimeout(clueFlashTimer.current);
   }, []);
+
+  const exitAlter = () => {
+    alter.dispatch({ type: 'alter.exit.requested', at: Date.now() });
+    window.setTimeout(
+      () => document.querySelector<HTMLElement>('.moro-companion__trigger')?.focus(),
+      80
+    );
+  };
+
+  useEffect(() => {
+    if (alter.state.phase !== 'P3') return;
+    const timer = window.setTimeout(() => {
+      alter.dispatch({ type: 'alter.reveal.completed', at: Date.now() });
+    }, 1200);
+    return () => window.clearTimeout(timer);
+  }, [alter.state.phase, alter.dispatch]);
 
   useEffect(() => {
     if (!storageReady) return;
@@ -309,27 +326,28 @@ export const EditorialApp: React.FC = () => {
         </div>
       )}
 
+      {(alter.state.phase === 'P3' || alter.state.phase === 'P4') && (
+        <AlterTerminal reveal={alter.state.phase === 'P3'} onExit={exitAlter} />
+      )}
+
       {alter.state.phase === 'P3' && (
         <>
-          <AlterFractureLab initialIntensity="G3" showControls={false} />
+          <AlterFractureLab initialIntensity="G3" showControls={false} transparentVoid />
           <div
             className="alter-reveal-bar"
             role="dialog"
             aria-modal="false"
-            aria-label="Fracture preview"
+            aria-label="Archive reveal"
             data-alter-reveal="true"
           >
-            <span>Interactive fiction / Fracture preview</span>
+            <span>Interactive fiction / Archive reveal</span>
             <button
               type="button"
-              onClick={() => {
-                alter.dispatch({ type: 'alter.exit.requested', at: Date.now() });
-                window.setTimeout(
-                  () => document.querySelector<HTMLElement>('.moro-companion__trigger')?.focus(),
-                  80
-                );
-              }}
+              onClick={() => alter.dispatch({ type: 'alter.reveal.completed', at: Date.now() })}
             >
+              Skip reveal
+            </button>
+            <button type="button" onClick={exitAlter}>
               Return to site
             </button>
           </div>

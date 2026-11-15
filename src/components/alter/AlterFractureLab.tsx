@@ -1,32 +1,17 @@
 import React, { useEffect, useState } from 'react';
+import { BRANCHES, MAIN_PATH, PRECURSOR_PATH, WHISPER_PATH } from './fractureGeometry';
 
 export type FractureIntensity = 'G0' | 'G1' | 'G2' | 'G3';
 
 interface AlterFractureLabProps {
   initialIntensity: FractureIntensity;
   showControls?: boolean;
+  transparentVoid?: boolean;
 }
-
-const MAIN_PATH = `M 200 -40
-L 230 30 L 212 88 L 252 150 L 226 208 L 268 270 L 240 330
-L 284 390 L 254 450 L 300 510 L 272 570 L 318 630 L 294 690 L 330 740
-L 430 740 L 404 690 L 418 630 L 400 570 L 400 510 L 354 450
-L 384 390 L 340 330 L 368 270 L 326 208 L 352 150 L 312 88
-L 330 30 L 300 -40 Z`;
-
-const BRANCHES = [
-  'M 252 150 L 168 130 L 130 96 L 92 104',
-  'M 326 208 L 430 180 L 490 206 L 550 170',
-  'M 286 476 L 190 508 L 142 560 L 118 640',
-  'M 354 450 L 460 472 L 530 520 L 570 590'
-];
-
-const PRECURSOR_PATH = 'M 296 326 L 304 319 L 309 329 L 320 323';
-const WHISPER_PATH = 'M 472 318 L 478 313 L 482 321 L 492 317';
 
 const intensityLabels: FractureIntensity[] = ['G0', 'G1', 'G2', 'G3'];
 
-export function AlterFractureLab({ initialIntensity, showControls = true }: AlterFractureLabProps) {
+export function AlterFractureLab({ initialIntensity, showControls = true, transparentVoid = false }: AlterFractureLabProps) {
   const [intensity, setIntensity] = useState<FractureIntensity>(initialIntensity);
   const [visible, setVisible] = useState(true);
   const [reduced, setReduced] = useState(false);
@@ -110,7 +95,7 @@ export function AlterFractureLab({ initialIntensity, showControls = true }: Alte
             <g className="alter-fracture__shake">
               <g className="alter-fracture__geometry">
               <g className="alter-fracture__main">
-                <path className="alter-fracture__void" d={MAIN_PATH} fill="url(#alter-terminal-pattern)" />
+                <path className="alter-fracture__void" d={MAIN_PATH} fill={transparentVoid ? 'none' : 'url(#alter-terminal-pattern)'} />
                 <path className="alter-fracture__edge-dark" d={MAIN_PATH} fill="none" stroke="#05070A" strokeWidth="8" strokeLinejoin="miter" />
                 <path className="alter-fracture__edge-red" d={MAIN_PATH} fill="none" stroke="#C54250" strokeWidth="2.5" strokeLinejoin="miter" />
                 <path className="alter-fracture__chroma-red" d={MAIN_PATH} fill="none" stroke="#E35A64" strokeWidth="4.5" transform="translate(-4 1)" opacity=".62" />

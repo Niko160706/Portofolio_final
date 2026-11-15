@@ -131,7 +131,11 @@ async function dismissAnomaly(page) {
   if (!(await page.locator('.alter-fracture').isVisible())) throw new Error('Fracture preview missing');
   if (!(await page.locator('[data-alter-reveal="true"]').isVisible())) throw new Error('Reveal bar missing');
   await page.screenshot({ path: path.join(SCREENSHOT_DIR, 'b3_investigate_preview_1440x900.png') });
-  await page.getByRole('button', { name: 'Return to site' }).click();
+  if (await page.locator('[data-alter-reveal="true"]').count()) {
+    await page.getByRole('button', { name: 'Return to site' }).click();
+  } else {
+    await page.getByRole('button', { name: 'Exit', exact: true }).click();
+  }
   await waitForPhase(page, 'P6');
   await page.waitForTimeout(300);
   if (await page.locator('.alter-fracture').count()) throw new Error('Fracture preview did not close');
