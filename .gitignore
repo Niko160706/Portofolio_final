@@ -31,13 +31,9 @@ AGENTS.md
 AGENTS_V2.md
 SRS_Human_Protocol_Portfolio_v1.md
 
-# Source/reference images are not runtime code.
-# Keep only the two approved Alter visual references for B2.
-assets/*
-!assets/reference/
-assets/reference/*
-!assets/reference/refrensi1.jpg
-!assets/reference/refrence_glitch2.png
+# Source/reference images are not runtime code and stay local.
+# Runtime images live in public/assets and remain tracked.
+/assets/
 character-playground/
 
 # Python caches and OS/editor noise
