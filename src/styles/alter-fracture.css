@@ -1,0 +1,288 @@
+/* Alter B2: isolated fracture proof of concept. Namespaced and dormant by default. */
+
+.alter-fracture {
+  position: fixed;
+  inset: 0;
+  z-index: 800;
+  pointer-events: none;
+  overflow: hidden;
+  contain: layout style paint;
+}
+
+.alter-fracture__stage {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.alter-fracture__main {
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+.alter-fracture[data-intensity='G1'] .alter-fracture__geometry {
+  clip-path: inset(47% 24% 47% 24%);
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, #000 18%, #000 82%, transparent 100%);
+  mask-image: linear-gradient(to bottom, transparent 0%, #000 18%, #000 82%, transparent 100%);
+}
+
+.alter-fracture[data-intensity='G2'] .alter-fracture__geometry {
+  clip-path: inset(39% 12% 39% 12%);
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, #000 15%, #000 85%, transparent 100%);
+  mask-image: linear-gradient(to bottom, transparent 0%, #000 15%, #000 85%, transparent 100%);
+}
+
+.alter-fracture[data-intensity='G3'] .alter-fracture__geometry {
+  clip-path: none;
+}
+
+.alter-fracture[data-intensity='G0'] .alter-fracture__main,
+.alter-fracture[data-intensity='G0'] .alter-fracture__branch,
+.alter-fracture[data-intensity='G0'] .alter-fracture__debris {
+  display: none;
+}
+
+.alter-fracture[data-intensity='G0'] .alter-fracture__whisper {
+  display: block;
+}
+
+.alter-fracture[data-intensity='G1'] .alter-fracture__branch--2,
+.alter-fracture[data-intensity='G1'] .alter-fracture__branch--3,
+.alter-fracture[data-intensity='G1'] .alter-fracture__branch--4,
+.alter-fracture[data-intensity='G1'] .alter-fracture__debris {
+  display: none;
+}
+
+.alter-fracture[data-intensity='G2'] .alter-fracture__debris {
+  display: none;
+}
+
+.alter-fracture__whisper {
+  display: none;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+.alter-fracture__void {
+  opacity: 0.98;
+}
+
+.alter-fracture__edge-dark {
+  filter: drop-shadow(0 0 7px rgba(0, 0, 0, 0.65));
+}
+
+.alter-fracture__edge-red {
+  filter: drop-shadow(0 0 5px rgba(197, 66, 80, 0.48));
+}
+
+.alter-fracture__chroma-red,
+.alter-fracture__chroma-cyan {
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+.alter-fracture__debris {
+  transform-box: fill-box;
+  transform-origin: center;
+  shape-rendering: crispEdges;
+}
+
+.alter-fracture__precursor {
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+.alter-fracture[data-intensity='G3'] .alter-fracture__precursor {
+  animation: alter-precursor 520ms ease-out both;
+}
+
+.alter-fracture[data-intensity='G3'] .alter-fracture__main {
+  animation: alter-main-reveal 1200ms cubic-bezier(.18,.7,.18,1) both;
+}
+
+.alter-fracture[data-intensity='G3'] .alter-fracture__branch {
+  animation: alter-branch-in 780ms cubic-bezier(.18,.7,.18,1) both;
+}
+
+.alter-fracture[data-intensity='G3'] .alter-fracture__branch--2 {
+  animation-delay: 120ms;
+}
+
+.alter-fracture[data-intensity='G3'] .alter-fracture__branch--3 {
+  animation-delay: 230ms;
+}
+
+.alter-fracture[data-intensity='G3'] .alter-fracture__branch--4 {
+  animation-delay: 320ms;
+}
+
+.alter-fracture[data-intensity='G3'] .alter-fracture__debris {
+  animation: alter-debris 820ms cubic-bezier(.2,.7,.2,1) both;
+}
+
+.alter-fracture[data-intensity='G3'] .alter-fracture__debris--2 {
+  animation-delay: 85ms;
+}
+
+.alter-fracture[data-intensity='G3'] .alter-fracture__debris--3 {
+  animation-delay: 150ms;
+}
+
+.alter-fracture[data-intensity='G3'] .alter-fracture__debris--4 {
+  animation-delay: 230ms;
+}
+
+.alter-fracture[data-intensity='G3'] .alter-fracture__debris--5 {
+  animation-delay: 300ms;
+}
+
+.alter-fracture[data-intensity='G3'] .alter-fracture__shake {
+  animation: alter-local-shake 160ms steps(2, end) 2;
+}
+
+.alter-fracture[data-intensity='G2'] .alter-fracture__precursor {
+  animation: alter-precursor 420ms ease-out both;
+}
+
+.alter-fracture[data-intensity='G2'] .alter-fracture__main {
+  animation: alter-main-reveal 680ms cubic-bezier(.18,.7,.18,1) both;
+}
+
+.alter-fracture[data-intensity='G1'] .alter-fracture__precursor {
+  animation: alter-precursor 260ms ease-out both;
+}
+
+.alter-fracture[data-intensity='G1'] .alter-fracture__main {
+  animation: alter-micro-reveal 350ms ease-out both;
+}
+
+.alter-fracture[data-intensity='G0'] .alter-fracture__whisper {
+  animation: alter-whisper 180ms ease-out both;
+}
+
+.alter-fracture[data-reduced-motion='true'] .alter-fracture__precursor,
+.alter-fracture[data-reduced-motion='true'] .alter-fracture__main,
+.alter-fracture[data-reduced-motion='true'] .alter-fracture__branch,
+.alter-fracture[data-reduced-motion='true'] .alter-fracture__debris,
+.alter-fracture[data-reduced-motion='true'] .alter-fracture__whisper,
+.alter-fracture[data-reduced-motion='true'] .alter-fracture__shake {
+  animation: none !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .alter-fracture__precursor,
+  .alter-fracture__main,
+  .alter-fracture__branch,
+  .alter-fracture__debris,
+  .alter-fracture__whisper,
+  .alter-fracture__shake {
+    animation: none !important;
+  }
+}
+
+.alter-fracture__controls {
+  position: fixed;
+  right: 18px;
+  bottom: 18px;
+  z-index: 10000;
+  width: min(360px, calc(100vw - 36px));
+  padding: 12px;
+  border: 1px solid #1e1e1e;
+  background: #f7f7f2;
+  color: #111;
+  box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.18);
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 11px;
+  line-height: 1.45;
+}
+
+.alter-fracture__controls strong {
+  display: block;
+  margin-bottom: 5px;
+  font-size: 11px;
+  letter-spacing: 0.04em;
+}
+
+.alter-fracture__controls-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-top: 6px;
+}
+
+.alter-fracture__controls button {
+  min-height: 30px;
+  padding: 4px 8px;
+  border: 1px solid #1e1e1e;
+  background: #fff;
+  color: #111;
+  font: inherit;
+  cursor: pointer;
+}
+
+.alter-fracture__controls button[aria-pressed='true'] {
+  background: #111;
+  color: #fff;
+}
+
+.alter-fracture__controls p {
+  margin: 7px 0 0;
+  color: #5a5a5a;
+  font-size: 10px;
+}
+
+@keyframes alter-precursor {
+  0% { opacity: 0; transform: translate3d(0, 0, 0) scaleX(.2); }
+  25% { opacity: 1; }
+  100% { opacity: 0; transform: translate3d(5px, -3px, 0) scaleX(1.2); }
+}
+
+@keyframes alter-main-reveal {
+  0% { opacity: 0; transform: scale(.86) translateY(-1%); }
+  10% { opacity: .02; transform: scale(.88) translateY(-.6%); }
+  24% { opacity: .55; transform: scale(.94) translateY(0); }
+  48% { opacity: 1; transform: scale(1.015); }
+  72% { opacity: 1; transform: scale(.998); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+@keyframes alter-micro-reveal {
+  0% { opacity: 0; transform: scale(.96); }
+  100% { opacity: .8; transform: scale(1); }
+}
+
+@keyframes alter-branch-in {
+  0% { opacity: 0; transform: translate3d(-5px, -3px, 0) scale(.92); }
+  55% { opacity: .9; }
+  100% { opacity: 1; transform: translate3d(0, 0, 0) scale(1); }
+}
+
+@keyframes alter-debris {
+  0% { opacity: 0; transform: translate3d(0, 0, 0) scale(.5); }
+  18% { opacity: 1; transform: translate3d(0, 0, 0) scale(1); }
+  100% { opacity: 0; transform: translate3d(10px, -8px, 0) scale(.8); }
+}
+
+@keyframes alter-local-shake {
+  0% { transform: translate3d(0, 0, 0); }
+  25% { transform: translate3d(-2px, 1px, 0); }
+  50% { transform: translate3d(2px, -1px, 0); }
+  75% { transform: translate3d(-1px, 2px, 0); }
+  100% { transform: translate3d(0, 0, 0); }
+}
+
+@keyframes alter-whisper {
+  0% { opacity: 0; transform: translate3d(0, 0, 0) scale(.5); }
+  35% { opacity: 1; }
+  100% { opacity: .75; transform: translate3d(2px, -1px, 0) scale(1); }
+}
+
+@media (max-width: 600px) {
+  .alter-fracture__controls {
+    right: 10px;
+    bottom: 10px;
+    width: min(330px, calc(100vw - 20px));
+  }
+}

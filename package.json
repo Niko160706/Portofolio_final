@@ -4,8 +4,8 @@
   "type": "module",
   "private": true,
   "scripts": {
-    "dev": "astro dev",
-    "start": "astro dev",
+    "dev": "node scripts/dev.mjs",
+    "start": "node scripts/dev.mjs",
     "build": "astro build",
     "preview": "astro preview",
     "test": "vitest run --pool=forks --poolOptions.forks.singleFork"

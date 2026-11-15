@@ -131,6 +131,19 @@ npm run preview
 npm test         # Vitest unit and static acceptance tests
 ```
 
+`npm run dev` uses `scripts/dev.mjs` to force Astro into foreground mode. This avoids Astro 7's agent auto-background timeout on WSL/Windows mounts. First start can take roughly 10-15 seconds on this filesystem.
+
+Alter visual QA builds:
+
+```bash
+npx astro build --mode alter-debug
+# serve dist, then open:
+# /?alterDebug=1          story-engine inspector
+# /?alterFracture=G3      fracture proof-of-concept
+```
+
+The debug inspector and fracture lab are not available in the default production build.
+
 A V3 Selenium smoke test is included:
 
 ```bash

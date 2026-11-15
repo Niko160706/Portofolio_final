@@ -22,6 +22,7 @@ import { UtilityDialog } from '../v3/UtilityDialog';
 import { SettingsPanel } from '../v3/SettingsPanel';
 import { AnomalyMessage } from '../narrative/AnomalyMessage';
 import { AlterDebugPanel } from '../alter/AlterDebugPanel';
+import { AlterFractureLab, type FractureIntensity } from '../alter/AlterFractureLab';
 import { useAlterExperience } from '../../lib/alter/useAlterExperience';
 import { shouldShowAlterDebug } from '../../lib/alter/alterDebug';
 import {
@@ -41,8 +42,10 @@ const scrollBehavior = () => (prefersReducedMotion() ? 'auto' : 'smooth');
 export const EditorialApp: React.FC = () => {
   const alter = useAlterExperience();
   const [showAlterDebug, setShowAlterDebug] = useState(false);
+  const [fractureIntensity, setFractureIntensity] = useState<FractureIntensity | null>(null);
 
   useEffect(() => {
+    const alterMode = import.meta.env.DEV || import.meta.env.MODE === 'alter-debug';
     setShowAlterDebug(
       shouldShowAlterDebug({
         dev: import.meta.env.DEV,
@@ -50,6 +53,11 @@ export const EditorialApp: React.FC = () => {
         search: window.location.search
       })
     );
+    if (!alterMode) return;
+    const requested = new URLSearchParams(window.location.search).get('alterFracture');
+    if (requested === 'G0' || requested === 'G1' || requested === 'G2' || requested === 'G3') {
+      setFractureIntensity(requested);
+    }
   }, []);
 
   const [narrative, dispatchNarrative] = useReducer(
@@ -262,6 +270,8 @@ export const EditorialApp: React.FC = () => {
           />
         </UtilityDialog>
       )}
+
+      {fractureIntensity && <AlterFractureLab initialIntensity={fractureIntensity} />}
 
       {showAlterDebug && (
         <AlterDebugPanel
