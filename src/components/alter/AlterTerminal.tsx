@@ -5,6 +5,7 @@ import {
   alterHelpLines,
   formatComparison,
   formatHash,
+  formatReconciliation,
   formatRecord,
   formatStatus,
   formatTraceList,
@@ -18,6 +19,7 @@ interface AlterTerminalProps {
   onExit: () => void;
   phase: AlterPhase;
   clues: AlterClueId[];
+  onReconcile: () => void;
 }
 
 const INITIAL_HISTORY = [
@@ -26,7 +28,7 @@ const INITIAL_HISTORY = [
   'Type help for the authored command surface.'
 ];
 
-export function AlterTerminal({ reveal, onExit, phase, clues }: AlterTerminalProps) {
+export function AlterTerminal({ reveal, onExit, phase, clues, onReconcile }: AlterTerminalProps) {
   const [motion, setMotion] = useState(true);
   const [command, setCommand] = useState('');
   const [history, setHistory] = useState<string[]>(INITIAL_HISTORY);
@@ -88,6 +90,16 @@ export function AlterTerminal({ reveal, onExit, phase, clues }: AlterTerminalPro
         break;
       case 'compare':
         append(formatComparison(parsed.id));
+        break;
+      case 'reconcile':
+        if (phase === 'P5') {
+          append(['Reconciliation already recorded. Read the resolution below.']);
+        } else if (phase === 'P4') {
+          append(formatReconciliation());
+          onReconcile();
+        } else {
+          append(['The archive is not open yet. Investigate first.']);
+        }
         break;
       case 'moro':
         append(getMoroVoiceLines({ phase, clues }));
@@ -160,6 +172,15 @@ export function AlterTerminal({ reveal, onExit, phase, clues }: AlterTerminalPro
               <p key={`${index}-${line.slice(0, 12)}`}>{line || '\u00a0'}</p>
             ))}
           </div>
+
+          {phase === 'P5' && !reveal && (
+            <section className="alter-terminal__resolution" aria-label="Reconciliation">
+              <p className="alter-terminal__resolution-label">RECONCILIATION / RECORD 004</p>
+              <p>MORO kept the visible summary readable.</p>
+              <p>ECHO preserved the seven omitted observations.</p>
+              <p>Neither account is complete. The disagreement is the record.</p>
+            </section>
+          )}
 
           {!reveal && (
             <form

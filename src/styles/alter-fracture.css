@@ -705,3 +705,87 @@
     min-height: 44px;
   }
 }
+
+/* B7: user-facing reconciliation and afterimage. */
+.alter-terminal__resolution {
+  width: min(820px, 100%);
+  margin: 0 0 16px;
+  padding: 14px 16px;
+  border-left: 2px solid var(--alter-red, #C54250);
+  background: rgba(20, 25, 27, 0.88);
+  color: #d7dfda;
+  font: 13px/1.7 var(--font-mono);
+}
+
+.alter-terminal__resolution p {
+  margin: 0 0 6px;
+}
+
+.alter-terminal__resolution-label {
+  color: var(--alter-red-bright, #E35A64);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+}
+
+.alter-afterimage {
+  position: fixed;
+  left: 18px;
+  bottom: 18px;
+  z-index: 950;
+  width: min(310px, calc(100vw - 36px));
+  padding: 10px 12px;
+  border: 1px solid var(--border-strong);
+  background: var(--surface);
+  color: var(--ink);
+  box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.14);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  line-height: 1.5;
+}
+
+.alter-afterimage span {
+  display: block;
+  color: var(--anomaly);
+  letter-spacing: 0.06em;
+}
+
+.alter-afterimage p {
+  margin: 5px 0 8px;
+  color: var(--ink-2);
+}
+
+.alter-afterimage button {
+  min-height: 32px;
+  padding: 4px 8px;
+  border: 1px solid var(--border-strong);
+  background: var(--ink);
+  color: #fff;
+  font: 10px var(--font-mono);
+  cursor: pointer;
+}
+
+.alter-afterimage button:hover {
+  background: var(--accent);
+}
+
+.alter-afterimage button:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 2px;
+}
+
+@media (max-width: 700px) {
+  .alter-terminal__resolution {
+    padding: 12px;
+    font-size: 12px;
+  }
+
+  .alter-afterimage {
+    left: 8px;
+    bottom: 8px;
+    width: min(300px, calc(100vw - 16px));
+  }
+
+  .alter-afterimage button {
+    min-height: 44px;
+  }
+}

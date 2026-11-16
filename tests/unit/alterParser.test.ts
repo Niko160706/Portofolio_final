@@ -5,6 +5,7 @@ import {
   formatHash,
   formatMoroVoice,
   formatEchoVoice,
+  formatReconciliation,
   formatRecord,
   formatStatus,
   formatTraceList,
@@ -27,6 +28,15 @@ describe('alterParser', () => {
     expect(parseAlterCommand('trace inspect 4')).toEqual({ type: 'trace-inspect', id: '004' });
     expect(parseAlterCommand('hash inspect 006')).toEqual({ type: 'hash-inspect', id: '006' });
     expect(parseAlterCommand('compare 004')).toEqual({ type: 'compare', id: '004' });
+  });
+
+  it('parses the user-facing reconcile command', () => {
+    expect(parseAlterCommand('reconcile')).toEqual({ type: 'reconcile' });
+    expect(alterHelpLines.join('\n')).toContain('reconcile');
+    const lines = formatReconciliation().join('\n');
+    expect(lines).toContain('RECORD 004');
+    expect(lines).toContain('seven omitted observations');
+    expect(lines).toContain('disagreement is the record');
   });
 
   it('rejects shell syntax without executing it', () => {

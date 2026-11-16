@@ -13,6 +13,7 @@ export type AlterCommand =
   | { type: 'trace-inspect'; id: string }
   | { type: 'hash-inspect'; id: string }
   | { type: 'compare'; id: string }
+  | { type: 'reconcile' }
   | { type: 'moro' }
   | { type: 'echo' }
   | { type: 'exit' }
@@ -27,6 +28,7 @@ export const alterHelpLines = [
   '  trace inspect <id>   inspect record 001-006',
   '  hash inspect <id>    show the record digest label',
   '  compare <id>         compare MORO and ECHO accounts',
+  '  reconcile            record the reconciliation',
   '  moro                 read the MORO statement',
   '  echo                 read the ECHO statement',
   '  exit                 leave the archive',
@@ -47,6 +49,7 @@ export function parseAlterCommand(raw: string): AlterCommand {
   if (normalized === 'help') return { type: 'help' };
   if (normalized === 'status') return { type: 'status' };
   if (normalized === 'trace list') return { type: 'trace-list' };
+  if (normalized === 'reconcile') return { type: 'reconcile' };
   if (normalized === 'moro') return { type: 'moro' };
   if (normalized === 'echo') return { type: 'echo' };
   if (normalized === 'exit') return { type: 'exit' };
@@ -122,6 +125,18 @@ export function formatComparison(id: string): string[] {
     `ECHO record [record ${echo.id}]: ${echo.record}`,
     `ECHO confidence: ${echo.confidence}`,
     `related: ${echo.related.join(', ')}`
+  ];
+}
+
+export function formatReconciliation(): string[] {
+  return [
+    'RECONCILIATION / RECORD 004',
+    '',
+    'MORO kept the visible summary readable.',
+    'ECHO preserved the seven omitted observations.',
+    'Neither account is complete. The disagreement is the record.',
+    '',
+    'Exit when you are ready. The normal page remains available.'
   ];
 }
 

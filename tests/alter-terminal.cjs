@@ -122,7 +122,7 @@ async function openTerminal(page) {
   if (!(await output.innerText()).includes('Omitted observations')) throw new Error('trace inspect output missing');
   await page.screenshot({ path: path.join(SHOT_DIR, 'b5_trace_inspect_1440x900.png') });
   await runCommand('compare 004');
-  if (!(await output.innerText()).includes('MORO claim:')) throw new Error('compare output missing');
+  if (!(await output.innerText()).includes('MORO claim')) throw new Error('compare output missing');
   await page.screenshot({ path: path.join(SHOT_DIR, 'b5_trace_compare_1440x900.png') });
   await runCommand('hash inspect 004');
   if (!(await output.innerText()).match(/[0-9a-f]{64}/)) throw new Error('hash output missing');

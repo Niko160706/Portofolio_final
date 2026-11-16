@@ -24,6 +24,7 @@ import { AnomalyMessage } from '../narrative/AnomalyMessage';
 import { AlterDebugPanel } from '../alter/AlterDebugPanel';
 import { AlterFractureLab, type FractureIntensity } from '../alter/AlterFractureLab';
 import { AlterTerminal } from '../alter/AlterTerminal';
+import { AlterAfterimage } from '../alter/AlterAfterimage';
 import { useAlterExperience } from '../../lib/alter/useAlterExperience';
 import { shouldShowAlterDebug } from '../../lib/alter/alterDebug';
 import { canDiscoverClue } from '../../lib/alter/alterMachine';
@@ -103,6 +104,14 @@ export const EditorialApp: React.FC = () => {
       () => document.querySelector<HTMLElement>('.moro-companion__trigger')?.focus(),
       80
     );
+  };
+
+  const replayAlter = () => {
+    alter.reset();
+    window.setTimeout(() => {
+      window.scrollTo({ top: 0, behavior: 'auto' });
+      document.querySelector<HTMLElement>('.brand')?.focus({ preventScroll: true });
+    }, 80);
   };
 
   useEffect(() => {
@@ -315,6 +324,8 @@ export const EditorialApp: React.FC = () => {
         <AlterFractureLab key={clueFlash.key} initialIntensity="G1" showControls={false} />
       )}
 
+      {alter.state.phase === 'P6' && <AlterAfterimage onReplay={replayAlter} />}
+
       {alter.state.phase === 'P2' && (
         <div className="alter-investigate" role="region" aria-label="Anomaly investigation" data-alter-investigate="true">
           <span>{alter.state.uniqueCategories} discrepancies recorded</span>
@@ -332,6 +343,7 @@ export const EditorialApp: React.FC = () => {
         <AlterTerminal
           reveal={alter.state.phase === 'P3'}
           onExit={exitAlter}
+          onReconcile={() => alter.dispatch({ type: 'alter.reconciliation.reached', at: Date.now() })}
           phase={alter.state.phase}
           clues={alter.state.discoveredClues.map((clue) => clue.id)}
         />
