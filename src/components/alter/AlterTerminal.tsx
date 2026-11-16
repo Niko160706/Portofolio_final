@@ -32,6 +32,7 @@ export function AlterTerminal({ reveal, onExit, phase, clues, onReconcile }: Alt
   const [motion, setMotion] = useState(true);
   const [command, setCommand] = useState('');
   const [history, setHistory] = useState<string[]>(INITIAL_HISTORY);
+  const terminalRef = useRef<HTMLDivElement>(null);
   const shellRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const outputRef = useRef<HTMLDivElement>(null);
@@ -49,15 +50,34 @@ export function AlterTerminal({ reveal, onExit, phase, clues, onReconcile }: Alt
   }, [reveal]);
 
   useEffect(() => {
+    if (reveal) return;
+    const terminal = terminalRef.current;
+    if (!terminal) return;
     const onKeyDown = (event: KeyboardEvent) => {
       if (event.key === 'Escape') {
         event.preventDefault();
         onExit();
+        return;
+      }
+      if (event.key !== 'Tab') return;
+      const focusable = Array.from(
+        terminal.querySelectorAll<HTMLElement>('button, input, [tabindex]:not([tabindex="-1"])')
+      ).filter((element) => !element.hasAttribute('disabled'));
+      if (!focusable.length) return;
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      const active = document.activeElement;
+      if (event.shiftKey && (active === first || !terminal.contains(active))) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && (active === last || !terminal.contains(active))) {
+        event.preventDefault();
+        first.focus();
       }
     };
     document.addEventListener('keydown', onKeyDown);
     return () => document.removeEventListener('keydown', onKeyDown);
-  }, [onExit]);
+  }, [reveal, onExit]);
 
   useEffect(() => {
     if (outputRef.current) outputRef.current.scrollTop = outputRef.current.scrollHeight;
@@ -130,6 +150,7 @@ export function AlterTerminal({ reveal, onExit, phase, clues, onReconcile }: Alt
 
   return (
     <div
+      ref={terminalRef}
       className="alter-terminal"
       data-reveal={reveal}
       data-motion={motion}

@@ -789,3 +789,15 @@
     min-height: 44px;
   }
 }
+
+/* B8: keep the command input reachable on short viewports. */
+.alter-terminal__shell {
+  overflow-y: auto;
+}
+
+.alter-terminal__form {
+  position: sticky;
+  bottom: 0;
+  background: var(--alter-void, #07090B);
+  padding-bottom: 4px;
+}

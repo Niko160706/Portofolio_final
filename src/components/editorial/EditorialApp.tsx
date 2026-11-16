@@ -118,7 +118,7 @@ export const EditorialApp: React.FC = () => {
     if (alter.state.phase !== 'P3') return;
     const timer = window.setTimeout(() => {
       alter.dispatch({ type: 'alter.reveal.completed', at: Date.now() });
-    }, 1200);
+    }, prefersReducedMotion() ? 0 : 1200);
     return () => window.clearTimeout(timer);
   }, [alter.state.phase, alter.dispatch]);
 

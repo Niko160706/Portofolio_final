@@ -220,7 +220,9 @@ async function openTerminal(page) {
     await loadFresh(reducedPage);
     await triggerFirstThree(reducedPage);
     await openTerminal(reducedPage);
-    await reducedPage.getByRole('button', { name: 'Skip reveal' }).click();
+    if (await reducedPage.locator('[data-alter-reveal="true"]').count()) {
+      await reducedPage.getByRole('button', { name: 'Skip reveal' }).click();
+    }
     await waitForPhase(reducedPage, 'P4');
     await reducedPage.waitForTimeout(400);
     const motionState = await reducedPage.locator('[data-alter-terminal="true"]').getAttribute('data-motion');
