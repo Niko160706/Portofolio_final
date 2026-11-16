@@ -4,18 +4,20 @@ import { fractureMaskDataUri } from './fractureGeometry';
 import {
   alterHelpLines,
   formatComparison,
-  formatEchoVoice,
   formatHash,
-  formatMoroVoice,
   formatRecord,
   formatStatus,
   formatTraceList,
   parseAlterCommand
 } from '../../lib/alter/alterParser';
+import { getEchoVoiceLines, getMoroVoiceLines } from '../../data/alterNarrative';
+import type { AlterClueId, AlterPhase } from '../../lib/alter/alterTypes';
 
 interface AlterTerminalProps {
   reveal: boolean;
   onExit: () => void;
+  phase: AlterPhase;
+  clues: AlterClueId[];
 }
 
 const INITIAL_HISTORY = [
@@ -24,7 +26,7 @@ const INITIAL_HISTORY = [
   'Type help for the authored command surface.'
 ];
 
-export function AlterTerminal({ reveal, onExit }: AlterTerminalProps) {
+export function AlterTerminal({ reveal, onExit, phase, clues }: AlterTerminalProps) {
   const [motion, setMotion] = useState(true);
   const [command, setCommand] = useState('');
   const [history, setHistory] = useState<string[]>(INITIAL_HISTORY);
@@ -88,10 +90,10 @@ export function AlterTerminal({ reveal, onExit }: AlterTerminalProps) {
         append(formatComparison(parsed.id));
         break;
       case 'moro':
-        append(formatMoroVoice());
+        append(getMoroVoiceLines({ phase, clues }));
         break;
       case 'echo':
-        append(formatEchoVoice());
+        append(getEchoVoiceLines({ phase, clues }));
         break;
       case 'exit':
         onExit();

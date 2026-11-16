@@ -278,6 +278,8 @@ export const EditorialApp: React.FC = () => {
         onResetVisualize={() => setVisualizeResetToken((value) => value + 1)}
         onDiscoverClue={discoverClue}
         discoveredClues={alter.state.discoveredClues.map((clue) => clue.id)}
+        alterPhase={alter.state.phase}
+        alterClues={alter.state.discoveredClues.map((clue) => clue.id)}
       />
 
       <SiteFooter
@@ -326,8 +328,13 @@ export const EditorialApp: React.FC = () => {
         </div>
       )}
 
-      {(alter.state.phase === 'P3' || alter.state.phase === 'P4') && (
-        <AlterTerminal reveal={alter.state.phase === 'P3'} onExit={exitAlter} />
+      {(alter.state.phase === 'P3' || alter.state.phase === 'P4' || alter.state.phase === 'P5') && (
+        <AlterTerminal
+          reveal={alter.state.phase === 'P3'}
+          onExit={exitAlter}
+          phase={alter.state.phase}
+          clues={alter.state.discoveredClues.map((clue) => clue.id)}
+        />
       )}
 
       {alter.state.phase === 'P3' && (

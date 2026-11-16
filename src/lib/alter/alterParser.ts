@@ -118,8 +118,8 @@ export function formatComparison(id: string): string[] {
   return [
     `compare ${echo.id} / ${echo.title}`,
     '',
-    `MORO claim: ${moro?.claim ?? 'No linked MORO statement.'}`,
-    `ECHO record: ${echo.record}`,
+    `MORO claim [record ${moro?.id ?? '?'}]: ${moro?.claim ?? 'No linked MORO statement.'}`,
+    `ECHO record [record ${echo.id}]: ${echo.record}`,
     `ECHO confidence: ${echo.confidence}`,
     `related: ${echo.related.join(', ')}`
   ];

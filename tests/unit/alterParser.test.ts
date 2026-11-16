@@ -81,8 +81,8 @@ describe('alterParser', () => {
     expect(hash).toContain(getAlterRecord('004')!.digest);
     expect(hash).toContain('does not authenticate');
     const comparison = formatComparison('004').join('\n');
-    expect(comparison).toContain('MORO claim:');
-    expect(comparison).toContain('ECHO record:');
+    expect(comparison).toContain('MORO claim');
+    expect(comparison).toContain('ECHO record');
     const pair = getComparisonRecords('004');
     expect(pair.echo?.source).toBe('ECHO');
     expect(pair.moro?.source).toBe('MORO');

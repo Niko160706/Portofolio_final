@@ -1,7 +1,8 @@
 import { forwardRef, useCallback, useEffect, useImperativeHandle, useLayoutEffect, useRef, useState, type KeyboardEvent as ReactKeyboardEvent, type PointerEvent as ReactPointerEvent } from 'react';
 import { isMoroManifest, MoroSpritePlayer, type MoroState } from '../../lib/moroSpritePlayer';
 import type { VectorDemoEvent } from './VectorDemo';
-import type { AlterClueId } from '../../lib/alter/alterTypes';
+import type { AlterClueId, AlterPhase } from '../../lib/alter/alterTypes';
+import { getMoroPhaseLine } from '../../data/alterNarrative';
 
 export interface MoroCompanionHandle {
   respond: (message: string, state?: MoroState) => void;
@@ -21,6 +22,8 @@ interface MoroCompanionProps {
   onResetVisualize: () => void;
   onDiscoverClue?: (clueId: AlterClueId) => void;
   discoveredClues?: AlterClueId[];
+  alterPhase?: AlterPhase;
+  alterClues?: AlterClueId[];
 }
 
 const messages = {
@@ -46,7 +49,7 @@ const morotransform = (scale: number, rotation: number) => {
 };
 
 export const MoroCompanion = forwardRef<MoroCompanionHandle, MoroCompanionProps>(
-  function MoroCompanion({ onOpenProjects, onOpenContact, onInspectSystem, visualizeContext, onResetVisualize, onDiscoverClue, discoveredClues = [] }, ref) {
+  function MoroCompanion({ onOpenProjects, onOpenContact, onInspectSystem, visualizeContext, onResetVisualize, onDiscoverClue, discoveredClues = [], alterPhase, alterClues = [] }, ref) {
     const rootRef = useRef<HTMLDivElement>(null);
     const motionRef = useRef<HTMLDivElement>(null);
     const safeAreaRef = useRef<HTMLSpanElement>(null);
@@ -79,6 +82,7 @@ export const MoroCompanion = forwardRef<MoroCompanionHandle, MoroCompanionProps>
     const movementEnabledRef = useRef(true);
     const heroVisibleRef = useRef(true);
     const lastCenterX = useRef(0);
+    const lastDirectResponseAt = useRef(0);
     const attentionUsed = useRef(false);
     const visualizeIntroduced = useRef(false);
 
@@ -258,7 +262,7 @@ export const MoroCompanion = forwardRef<MoroCompanionHandle, MoroCompanionProps>
     }, [place, reducedMotion]);
 
     useImperativeHandle(ref, () => ({
-      respond: (message, state = 'review') => { if (state) playerRef.current?.playOnce(state, 'idle'); setContext(message); announce(message, 6000); },
+      respond: (message, state = 'review') => { lastDirectResponseAt.current = performance.now(); if (state) playerRef.current?.playOnce(state, 'idle'); setContext(message); announce(message, 6000); },
       play: (state) => playerRef.current?.play(state),
       playOnce: (state, returnTo) => playerRef.current?.playOnce(state, returnTo),
       setIdleState: (state) => playerRef.current?.setIdleState(state),
@@ -522,6 +526,7 @@ export const MoroCompanion = forwardRef<MoroCompanionHandle, MoroCompanionProps>
           .filter((entry) => entry.isIntersecting)
           .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
         if (!visible) return;
+        if (performance.now() - lastDirectResponseAt.current < 4000) return;
         const section = elements.find((item) => item.element === visible.target);
         if (!section) return;
         setCurrentArea(section.area);
@@ -702,7 +707,18 @@ export const MoroCompanion = forwardRef<MoroCompanionHandle, MoroCompanionProps>
       const nextOpen = !openRef.current;
       openRef.current = nextOpen;
       setOpen(nextOpen);
-      if (nextOpen) playerRef.current?.playOnce('jumping', 'idle');
+      if (nextOpen) {
+        const phaseLine = alterPhase
+          ? getMoroPhaseLine({ phase: alterPhase, clues: alterClues })
+          : null;
+        if (phaseLine) {
+          lastDirectResponseAt.current = performance.now();
+          setContext(phaseLine);
+          playerRef.current?.playOnce('waiting', 'idle');
+        } else {
+          playerRef.current?.playOnce('jumping', 'idle');
+        }
+      }
     };
 
     const handleMovementToggle = () => {
