@@ -618,3 +618,90 @@
     font-size: 9px;
   }
 }
+
+/* B5: authored command output and input. */
+.alter-terminal__output {
+  width: min(820px, 100%);
+  max-height: min(42vh, 420px);
+  margin: 8px 0 14px;
+  padding: 4px 0;
+  overflow-y: auto;
+  color: #cbd4cf;
+  font: 13px/1.7 var(--font-mono);
+  scrollbar-color: rgba(197, 66, 80, 0.5) transparent;
+}
+
+.alter-terminal__output p {
+  margin: 0 0 6px;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.alter-terminal__form {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: min(820px, 100%);
+  margin-top: 6px;
+  padding: 8px 0;
+  border-top: 1px solid var(--alter-border, #263035);
+  border-bottom: 1px solid var(--alter-border, #263035);
+  color: var(--alter-red, #C54250);
+  font: 14px var(--font-mono);
+}
+
+.alter-terminal__form input {
+  flex: 1;
+  min-width: 0;
+  padding: 7px 4px;
+  border: 0;
+  border-bottom: 1px solid rgba(197, 66, 80, 0.45);
+  background: transparent;
+  color: #e4eae5;
+  font: inherit;
+  caret-color: var(--alter-red, #C54250);
+}
+
+.alter-terminal__form input:focus {
+  outline: none;
+  border-bottom-color: var(--alter-red-bright, #E35A64);
+}
+
+.alter-terminal__form input::placeholder {
+  color: rgba(180, 191, 185, 0.45);
+}
+
+.alter-terminal__form button {
+  min-height: 38px;
+  padding: 5px 12px;
+  border: 1px solid var(--alter-border, #263035);
+  background: transparent;
+  color: var(--alter-text, #D8E0DC);
+  font: 11px var(--font-mono);
+  cursor: pointer;
+}
+
+.alter-terminal__form button:hover {
+  border-color: var(--alter-red, #C54250);
+  color: #fff;
+}
+
+.alter-terminal__form button:focus-visible {
+  outline: 3px solid var(--alter-focus, #E7C8B4);
+  outline-offset: 2px;
+}
+
+@media (max-width: 700px) {
+  .alter-terminal__output {
+    max-height: 34vh;
+    font-size: 12px;
+  }
+
+  .alter-terminal__form input {
+    font-size: 13px;
+  }
+
+  .alter-terminal__form button {
+    min-height: 44px;
+  }
+}

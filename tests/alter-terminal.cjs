@@ -105,6 +105,35 @@ async function openTerminal(page) {
   }
   await page.screenshot({ path: path.join(SHOT_DIR, 'b4_terminal_1440x900.png') });
 
+  // B5 authored command surface.
+  const commandInput = page.locator('#alter-command');
+  const output = page.locator('.alter-terminal__output');
+  const runCommand = async (value) => {
+    await commandInput.fill(value);
+    await commandInput.press('Enter');
+    await page.waitForTimeout(180);
+  };
+  await runCommand('help');
+  if (!(await output.innerText()).includes('AUTHORED COMMAND SURFACE')) throw new Error('help output missing');
+  await runCommand('trace list');
+  if (!(await output.innerText()).includes('TRACE INDEX')) throw new Error('trace list output missing');
+  await page.screenshot({ path: path.join(SHOT_DIR, 'b5_trace_list_1440x900.png') });
+  await runCommand('trace inspect 004');
+  if (!(await output.innerText()).includes('Omitted observations')) throw new Error('trace inspect output missing');
+  await page.screenshot({ path: path.join(SHOT_DIR, 'b5_trace_inspect_1440x900.png') });
+  await runCommand('compare 004');
+  if (!(await output.innerText()).includes('MORO claim:')) throw new Error('compare output missing');
+  await page.screenshot({ path: path.join(SHOT_DIR, 'b5_trace_compare_1440x900.png') });
+  await runCommand('hash inspect 004');
+  if (!(await output.innerText()).match(/[0-9a-f]{64}/)) throw new Error('hash output missing');
+  await runCommand('trace inspect 004; rm -rf /');
+  if (!(await output.innerText()).includes('command rejected')) throw new Error('unsafe command was not rejected');
+  await runCommand('whoami');
+  if (!(await output.innerText()).includes('unknown command')) throw new Error('unknown command handling missing');
+  await runCommand('echo');
+  if (!(await output.innerText()).includes('ECHO:')) throw new Error('ECHO voice missing');
+  console.log('B5 command surface pass');
+
   // Resize while the terminal is open; the rain canvas must resize with it.
   await page.setViewportSize({ width: 1024, height: 768 });
   await page.waitForTimeout(350);
@@ -146,8 +175,8 @@ async function openTerminal(page) {
   await page.waitForTimeout(200);
   if (!(await motionButton.innerText()).includes('Off')) throw new Error('Motion toggle failed');
 
-  // Escape exits and restores focus.
-  await page.keyboard.press('Escape');
+  // The exit command closes the terminal and restores focus.
+  await runCommand('exit');
   await waitForPhase(page, 'P6');
   await page.waitForTimeout(300);
   if (await page.locator('[data-alter-terminal="true"]').count()) throw new Error('Terminal did not exit');
@@ -173,7 +202,12 @@ async function openTerminal(page) {
       throw new Error('Mobile Exit missing');
     }
     await mobilePage.screenshot({ path: path.join(SHOT_DIR, 'b4_terminal_390x844.png') });
-    console.log('mobile terminal pass');
+    await mobilePage.keyboard.press('Escape');
+    await waitForPhase(mobilePage, 'P6');
+    if (await mobilePage.locator('[data-alter-terminal="true"]').count()) {
+      throw new Error('Mobile Escape did not close the terminal');
+    }
+    console.log('mobile terminal and Escape pass');
     await mobileContext.close();
   }
 
@@ -220,9 +254,9 @@ async function openTerminal(page) {
 
   await browser.close();
   if (errors.length) throw new Error(`Console/page errors:\n${errors.join('\n')}`);
-  console.log('ALTER B4 TERMINAL PASSED');
+  console.log('ALTER B4/B5 TERMINAL PASSED');
 })().catch((error) => {
-  console.error('ALTER B4 TERMINAL FAILED');
+  console.error('ALTER B4/B5 TERMINAL FAILED');
   console.error(error);
   process.exit(1);
 });

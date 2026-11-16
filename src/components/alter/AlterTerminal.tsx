@@ -1,15 +1,36 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { AlterRain } from './AlterRain';
 import { fractureMaskDataUri } from './fractureGeometry';
+import {
+  alterHelpLines,
+  formatComparison,
+  formatEchoVoice,
+  formatHash,
+  formatMoroVoice,
+  formatRecord,
+  formatStatus,
+  formatTraceList,
+  parseAlterCommand
+} from '../../lib/alter/alterParser';
 
 interface AlterTerminalProps {
   reveal: boolean;
   onExit: () => void;
 }
 
+const INITIAL_HISTORY = [
+  'ARCHIVE / OBSERVER',
+  'link established.',
+  'Type help for the authored command surface.'
+];
+
 export function AlterTerminal({ reveal, onExit }: AlterTerminalProps) {
   const [motion, setMotion] = useState(true);
+  const [command, setCommand] = useState('');
+  const [history, setHistory] = useState<string[]>(INITIAL_HISTORY);
   const shellRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
+  const outputRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const preference = window.matchMedia('(prefers-reduced-motion: reduce)');
@@ -20,7 +41,7 @@ export function AlterTerminal({ reveal, onExit }: AlterTerminalProps) {
   }, []);
 
   useEffect(() => {
-    if (!reveal) shellRef.current?.focus();
+    if (!reveal) inputRef.current?.focus();
   }, [reveal]);
 
   useEffect(() => {
@@ -33,6 +54,61 @@ export function AlterTerminal({ reveal, onExit }: AlterTerminalProps) {
     document.addEventListener('keydown', onKeyDown);
     return () => document.removeEventListener('keydown', onKeyDown);
   }, [onExit]);
+
+  useEffect(() => {
+    if (outputRef.current) outputRef.current.scrollTop = outputRef.current.scrollHeight;
+  }, [history]);
+
+  const append = (lines: string[]) => {
+    setHistory((current) => [...current, ...lines].slice(-140));
+  };
+
+  const runCommand = (raw: string) => {
+    const parsed = parseAlterCommand(raw);
+    if (parsed.type === 'empty') return;
+    append([`\u276f ${raw}`]);
+
+    switch (parsed.type) {
+      case 'help':
+        append(alterHelpLines);
+        break;
+      case 'status':
+        append(formatStatus());
+        break;
+      case 'trace-list':
+        append(formatTraceList());
+        break;
+      case 'trace-inspect':
+        append(formatRecord(parsed.id));
+        break;
+      case 'hash-inspect':
+        append(formatHash(parsed.id));
+        break;
+      case 'compare':
+        append(formatComparison(parsed.id));
+        break;
+      case 'moro':
+        append(formatMoroVoice());
+        break;
+      case 'echo':
+        append(formatEchoVoice());
+        break;
+      case 'exit':
+        onExit();
+        return;
+      case 'unsafe':
+        append([
+          'command rejected. This preview accepts authored commands only.',
+          'No shell, network, or file access was attempted. Type help.'
+        ]);
+        break;
+      case 'unknown':
+        append([`unknown command: ${parsed.input}`, 'Type help for the authored command list.']);
+        break;
+    }
+
+    setCommand('');
+  };
 
   const style = {
     '--alter-reveal-mask': fractureMaskDataUri()
@@ -76,14 +152,43 @@ export function AlterTerminal({ reveal, onExit }: AlterTerminalProps) {
           <p className="alter-terminal__lead">
             The surface has opened. This is the first readable layer below the portfolio.
           </p>
-          <pre className="alter-terminal__log">{`> link established
-> source: observer.cache
-> integrity: contested
-> record index: sealed
 
-Interactive fiction / no live system or real data.`}</pre>
+          <div ref={outputRef} className="alter-terminal__output" aria-live="polite" aria-relevant="additions">
+            {history.map((line, index) => (
+              <p key={`${index}-${line.slice(0, 12)}`}>{line || '\u00a0'}</p>
+            ))}
+          </div>
+
+          {!reveal && (
+            <form
+              className="alter-terminal__form"
+              onSubmit={(event) => {
+                event.preventDefault();
+                runCommand(command);
+              }}
+            >
+              <label className="sr-only" htmlFor="alter-command">
+                Archive command
+              </label>
+              <span aria-hidden="true">{'\u276f'}</span>
+              <input
+                ref={inputRef}
+                id="alter-command"
+                value={command}
+                onChange={(event) => setCommand(event.target.value)}
+                autoComplete="off"
+                autoCapitalize="off"
+                spellCheck={false}
+                placeholder="help"
+                aria-label="Archive command"
+                maxLength={120}
+              />
+              <button type="submit">Run</button>
+            </form>
+          )}
+
           <p className="alter-terminal__hint">
-            The record index is sealed in this layer. Authored traces will be mounted next.
+            Authored traces only. No shell, network, real data, or live model.
           </p>
         </main>
 
