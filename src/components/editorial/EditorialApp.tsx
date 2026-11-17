@@ -21,21 +21,6 @@ import { MoroCompanion, type MoroCompanionHandle } from '../v3/MoroCompanion';
 import { UtilityDialog } from '../v3/UtilityDialog';
 import { SettingsPanel } from '../v3/SettingsPanel';
 import { AnomalyMessage } from '../narrative/AnomalyMessage';
-import { AlterDebugPanel } from '../alter/AlterDebugPanel';
-import { AlterFractureLab, type FractureIntensity } from '../alter/AlterFractureLab';
-import { AlterTerminal } from '../alter/AlterTerminal';
-import { AlterAfterimage } from '../alter/AlterAfterimage';
-import { useAlterExperience } from '../../lib/alter/useAlterExperience';
-import { shouldShowAlterDebug } from '../../lib/alter/alterDebug';
-import { canDiscoverClue } from '../../lib/alter/alterMachine';
-import type { AlterClueId } from '../../lib/alter/alterTypes';
-import {
-  archiveNoteEvent,
-  moroActionEvent,
-  researchCompletedEvent,
-  researchInspectEvent,
-  visualizeCommittedEvent
-} from '../../lib/alter/alterBridge';
 import type { VectorDemoEvent } from '../v3/VectorDemo';
 
 const prefersReducedMotion = () =>
@@ -44,27 +29,6 @@ const prefersReducedMotion = () =>
 const scrollBehavior = () => (prefersReducedMotion() ? 'auto' : 'smooth');
 
 export const EditorialApp: React.FC = () => {
-  const alter = useAlterExperience();
-  const [showAlterDebug, setShowAlterDebug] = useState(false);
-  const [fractureIntensity, setFractureIntensity] = useState<FractureIntensity | null>(null);
-  const [clueFlash, setClueFlash] = useState<{ id: AlterClueId; key: number } | null>(null);
-
-  useEffect(() => {
-    const alterMode = import.meta.env.DEV || import.meta.env.MODE === 'alter-debug';
-    setShowAlterDebug(
-      shouldShowAlterDebug({
-        dev: import.meta.env.DEV,
-        mode: import.meta.env.MODE,
-        search: window.location.search
-      })
-    );
-    if (!alterMode) return;
-    const requested = new URLSearchParams(window.location.search).get('alterFracture');
-    if (requested === 'G0' || requested === 'G1' || requested === 'G2' || requested === 'G3') {
-      setFractureIntensity(requested);
-    }
-  }, []);
-
   const [narrative, dispatchNarrative] = useReducer(
     narrativeReducer,
     undefined,
@@ -84,43 +48,6 @@ export const EditorialApp: React.FC = () => {
   const [visualizeContext, setVisualizeContext] = useState<{ current?: VectorDemoEvent; previous?: VectorDemoEvent }>({});
   const copyTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const moroRef = useRef<MoroCompanionHandle>(null);
-  const clueFlashTimer = useRef<number | null>(null);
-
-  const discoverClue = (clueId: AlterClueId) => {
-    if (!canDiscoverClue(alter.state, clueId)) return;
-    alter.dispatch({ type: 'anomaly.clue.discovered', clueId, discoveredAt: Date.now() });
-    setClueFlash({ id: clueId, key: Date.now() });
-    if (clueFlashTimer.current !== null) window.clearTimeout(clueFlashTimer.current);
-    clueFlashTimer.current = window.setTimeout(() => setClueFlash(null), 520);
-  };
-
-  useEffect(() => () => {
-    if (clueFlashTimer.current !== null) window.clearTimeout(clueFlashTimer.current);
-  }, []);
-
-  const exitAlter = () => {
-    alter.dispatch({ type: 'alter.exit.requested', at: Date.now() });
-    window.setTimeout(
-      () => document.querySelector<HTMLElement>('.moro-companion__trigger')?.focus(),
-      80
-    );
-  };
-
-  const replayAlter = () => {
-    alter.reset();
-    window.setTimeout(() => {
-      window.scrollTo({ top: 0, behavior: 'auto' });
-      document.querySelector<HTMLElement>('.brand')?.focus({ preventScroll: true });
-    }, 80);
-  };
-
-  useEffect(() => {
-    if (alter.state.phase !== 'P3') return;
-    const timer = window.setTimeout(() => {
-      alter.dispatch({ type: 'alter.reveal.completed', at: Date.now() });
-    }, prefersReducedMotion() ? 0 : 1200);
-    return () => window.clearTimeout(timer);
-  }, [alter.state.phase, alter.dispatch]);
 
   useEffect(() => {
     if (!storageReady) return;
@@ -159,7 +86,6 @@ export const EditorialApp: React.FC = () => {
   }, []);
 
   const handleInspectAssistant = () => {
-    alter.dispatch(moroActionEvent('inspect-signal'));
     dispatchNarrative({ type: 'ASSISTANT_INSPECT_CLICKED' });
     if (narrative.effectsEnabled) {
       setTimeout(() => dispatchNarrative({ type: 'ANIMATION_COMPLETED' }), 500);
@@ -167,8 +93,6 @@ export const EditorialApp: React.FC = () => {
   };
 
   const handleInspectTrace = () => {
-    discoverClue('C02');
-    alter.dispatch(researchInspectEvent('trace-04'));
     dispatchNarrative({ type: 'RESEARCH_TRACE_INSPECTED', projectId: 'deep-research' });
     if (narrative.effectsEnabled) {
       setTimeout(() => dispatchNarrative({ type: 'ANIMATION_COMPLETED' }), 400);
@@ -178,12 +102,10 @@ export const EditorialApp: React.FC = () => {
   const handleResearchStart = () => moroRef.current?.play('running');
   const handleResearchPause = () => moroRef.current?.setIdleState('idle');
   const handleResearchComplete = () => {
-    alter.dispatch(researchCompletedEvent('research', true));
     moroRef.current?.playOnce('review', 'idle');
   };
   const handleResearchReset = () => moroRef.current?.setIdleState('idle');
   const handleVectorInteraction = (event: VectorDemoEvent) => {
-    alter.dispatch(visualizeCommittedEvent(event));
     setVisualizeContext((context) => ({ previous: context.current, current: event }));
     if (event.type === 'reset') moroRef.current?.respond("Back to our starting point!", 'jumping');
     else if (event.type === 'preset' && event.preset === 'Identity') moroRef.current?.respond('Identity leaves every component exactly where it started.', 'review');
@@ -198,7 +120,6 @@ export const EditorialApp: React.FC = () => {
   };
 
   const handleOpenHiddenLog = () => {
-    alter.dispatch(archiveNoteEvent('observer-log'));
     dispatchNarrative({ type: 'HIDDEN_LOG_OPENED' });
     if (narrative.effectsEnabled) {
       setTimeout(() => dispatchNarrative({ type: 'ANIMATION_COMPLETED' }), 400);
@@ -260,8 +181,8 @@ export const EditorialApp: React.FC = () => {
           onTraceReset={handleResearchReset}
           onVectorInteraction={handleVectorInteraction}
           visualizeResetToken={visualizeResetToken}
-          onInspectOrientation={() => discoverClue('C03')}
-          onArchiveNote={() => discoverClue('C04')}
+          onInspectOrientation={() => {}}
+          onArchiveNote={handleOpenHiddenLog}
         />
 
         <LabSection
@@ -285,10 +206,6 @@ export const EditorialApp: React.FC = () => {
         onInspectSystem={handleInspectAssistant}
         visualizeContext={visualizeContext}
         onResetVisualize={() => setVisualizeResetToken((value) => value + 1)}
-        onDiscoverClue={discoverClue}
-        discoveredClues={alter.state.discoveredClues.map((clue) => clue.id)}
-        alterPhase={alter.state.phase}
-        alterClues={alter.state.discoveredClues.map((clue) => clue.id)}
       />
 
       <SiteFooter
@@ -318,71 +235,6 @@ export const EditorialApp: React.FC = () => {
             }}
           />
         </UtilityDialog>
-      )}
-
-      {clueFlash && (
-        <AlterFractureLab key={clueFlash.key} initialIntensity="G1" showControls={false} />
-      )}
-
-      {alter.state.phase === 'P6' && <AlterAfterimage onReplay={replayAlter} />}
-
-      {alter.state.phase === 'P2' && (
-        <div className="alter-investigate" role="region" aria-label="Anomaly investigation" data-alter-investigate="true">
-          <span>{alter.state.uniqueCategories} discrepancies recorded</span>
-          <button
-            id="alter-investigate-button"
-            type="button"
-            onClick={() => alter.dispatch({ type: 'alter.reveal.requested', at: Date.now() })}
-          >
-            Investigate anomaly
-          </button>
-        </div>
-      )}
-
-      {(alter.state.phase === 'P3' || alter.state.phase === 'P4' || alter.state.phase === 'P5') && (
-        <AlterTerminal
-          reveal={alter.state.phase === 'P3'}
-          onExit={exitAlter}
-          onReconcile={() => alter.dispatch({ type: 'alter.reconciliation.reached', at: Date.now() })}
-          phase={alter.state.phase}
-          clues={alter.state.discoveredClues.map((clue) => clue.id)}
-        />
-      )}
-
-      {alter.state.phase === 'P3' && (
-        <>
-          <AlterFractureLab initialIntensity="G3" showControls={false} transparentVoid />
-          <div
-            className="alter-reveal-bar"
-            role="dialog"
-            aria-modal="false"
-            aria-label="Archive reveal"
-            data-alter-reveal="true"
-          >
-            <span>Interactive fiction / Archive reveal</span>
-            <button
-              type="button"
-              onClick={() => alter.dispatch({ type: 'alter.reveal.completed', at: Date.now() })}
-            >
-              Skip reveal
-            </button>
-            <button type="button" onClick={exitAlter}>
-              Return to site
-            </button>
-          </div>
-        </>
-      )}
-
-      {fractureIntensity && <AlterFractureLab initialIntensity={fractureIntensity} />}
-
-      {showAlterDebug && (
-        <AlterDebugPanel
-          state={alter.state}
-          dispatch={alter.dispatch}
-          eventLog={alter.eventLog}
-          reset={alter.reset}
-          hydrated={alter.hydrated}
-        />
       )}
     </div>
   );

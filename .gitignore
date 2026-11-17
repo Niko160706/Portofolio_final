@@ -7,31 +7,50 @@ coverage/
 *.tsbuildinfo
 *.log
 
-# Local tooling, browser profiles, and QA scratch data
+# Local tooling, browser profiles, QA scratch, and one-off experiments
 .opencode/
+opencode/
 .qodo/
+.qodo
 .agents/
+agents/
 .chrome-*/
+chrome-*/
 .edge-qa/
+edge-qa/
+chrome-qa-simple/
 artifacts/
 playwright-report/
 test-results/
+tests/legacy-*/
+tests/legacy-superseded/
+tests/legacy-v2/
+tests/__pycache__/
 
-# Planning, instructions, and reports (README.md is intentionally tracked)
-docs/
+# Alter experiment (fully removed from source; keep out of the repo)
+alter/
+alter-lab/
+**/alter/
+**/alter-lab/
+public/alter-lab/
+
+# Markdown docs are not needed to run the app (only the repo README and font license are kept)
+*.md
+!README.md
+!public/fonts/LICENSES.md
 README_START_HERE.md
-01_ALTER_EXPERIENCE_SRS.md
-02_VISUAL_MOTION_AND_NARRATIVE_DESIGN.md
-03_DEEPSEEK_BATCH_RUNBOOK.md
-DESIGN.md
-DELIVERY_GATE.md
-IMPLEMENTATION_REPORT.md
-REFERENCE_REFINEMENT_REPORT.md
+01_*.md
+02_*.md
+03_*.md
 AGENTS.md
 AGENTS_V2.md
-SRS_Human_Protocol_Portfolio_v1.md
+DELIVERY_GATE.md
+DESIGN.md
+IMPLEMENTATION_REPORT.md
+REFERENCE_REFINEMENT_REPORT.md
+SRS_*.md
 
-# Source/reference images are not runtime code and stay local.
+# Source/reference images and playgrounds are not runtime code and stay local.
 # Runtime images live in public/assets and remain tracked.
 /assets/
 character-playground/

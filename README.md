@@ -133,16 +133,6 @@ npm test         # Vitest unit and static acceptance tests
 
 `npm run dev` uses `scripts/dev.mjs` to force Astro into foreground mode. This avoids Astro 7's agent auto-background timeout on WSL/Windows mounts. First start can take roughly 10-15 seconds on this filesystem.
 
-Alter visual QA builds:
-
-```bash
-npx astro build --mode alter-debug
-# serve dist, then open:
-# /?alterDebug=1          story-engine inspector
-# /?alterFracture=G3      fracture proof-of-concept
-```
-
-The debug inspector and fracture lab are not available in the default production build.
 
 A V3 Selenium smoke test is included:
 
@@ -208,19 +198,7 @@ MORO is a small scripted canvas companion. It is not a live model, chatbot, or O
 - Persistence: `moro-disabled` and `moro-motion-disabled` are local storage preferences. No telemetry or network requests.
 - Limitation: the `failed` animation is exposed by the player but not triggered because the current illustrative research console has no real failure event. No failure is fabricated.
 
-## 7. Alter Experience (hidden)
-
-The portfolio includes a hidden, scripted second layer called **Alter**. It is intentionally dormant for normal visitors and activates only through meaningful, authored interactions.
-
-- **Normal mode:** the editorial portfolio, routes, and the four existing anomalies behave as before.
-- **Clues:** MORO status note, Research `/inspect` chain, VectorDemo `Inspect orientation`, Lab `observer.log` inspect, and Research run complete can reveal the story.
-- **Terminal:** after investigation, a local allowlisted terminal opens behind a restrained fracture/rain transition. Commands include `help`, `status`, `scan --surface`, `trace inspect 004`, `open /archive/inspect`, `compare 004`, `moro`, `echo`, and `reconcile`.
-- **Exit/reset:** Escape or Exit leaves Alter and restores normal behavior; replay/reset clears the session Alter state (`human-protocol:alter:v1`) and returns to the start.
-- **Safety:** no fake shell, no fake filesystem, no live AI, no network calls, and no real credentials. Records, hashes, and disagreement messages are authored local fiction.
-- **Debug/QA:** fracture/debug inspector is available only in dev or `alter-debug` builds with query flags (for example `?alterDebug=1` or `?alterFracture=G3`), not in the default production build.
-- **Known limit:** fracture visuals are a functional approximation and do not exactly match the local reference images kept outside git.
-
-## 8. Content honesty
+## 7. Content honesty
 
 
 - The 84% recall figure is owner-reported from a 50-query local benchmark and is labelled as such in the Deep Research preview and case study. It was not independently re-run here.

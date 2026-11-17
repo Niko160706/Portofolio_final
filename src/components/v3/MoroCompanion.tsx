@@ -1,8 +1,6 @@
 import { forwardRef, useCallback, useEffect, useImperativeHandle, useLayoutEffect, useRef, useState, type KeyboardEvent as ReactKeyboardEvent, type PointerEvent as ReactPointerEvent } from 'react';
 import { isMoroManifest, MoroSpritePlayer, type MoroState } from '../../lib/moroSpritePlayer';
 import type { VectorDemoEvent } from './VectorDemo';
-import type { AlterClueId, AlterPhase } from '../../lib/alter/alterTypes';
-import { getMoroPhaseLine } from '../../data/alterNarrative';
 
 export interface MoroCompanionHandle {
   respond: (message: string, state?: MoroState) => void;
@@ -20,10 +18,6 @@ interface MoroCompanionProps {
   onInspectSystem: () => void;
   visualizeContext: { current?: VectorDemoEvent; previous?: VectorDemoEvent };
   onResetVisualize: () => void;
-  onDiscoverClue?: (clueId: AlterClueId) => void;
-  discoveredClues?: AlterClueId[];
-  alterPhase?: AlterPhase;
-  alterClues?: AlterClueId[];
 }
 
 const messages = {
@@ -49,7 +43,7 @@ const morotransform = (scale: number, rotation: number) => {
 };
 
 export const MoroCompanion = forwardRef<MoroCompanionHandle, MoroCompanionProps>(
-  function MoroCompanion({ onOpenProjects, onOpenContact, onInspectSystem, visualizeContext, onResetVisualize, onDiscoverClue, discoveredClues = [], alterPhase, alterClues = [] }, ref) {
+  function MoroCompanion({ onOpenProjects, onOpenContact, onInspectSystem, visualizeContext, onResetVisualize }, ref) {
     const rootRef = useRef<HTMLDivElement>(null);
     const motionRef = useRef<HTMLDivElement>(null);
     const safeAreaRef = useRef<HTMLSpanElement>(null);
@@ -708,16 +702,7 @@ export const MoroCompanion = forwardRef<MoroCompanionHandle, MoroCompanionProps>
       openRef.current = nextOpen;
       setOpen(nextOpen);
       if (nextOpen) {
-        const phaseLine = alterPhase
-          ? getMoroPhaseLine({ phase: alterPhase, clues: alterClues })
-          : null;
-        if (phaseLine) {
-          lastDirectResponseAt.current = performance.now();
-          setContext(phaseLine);
-          playerRef.current?.playOnce('waiting', 'idle');
-        } else {
-          playerRef.current?.playOnce('jumping', 'idle');
-        }
+        playerRef.current?.playOnce('jumping', 'idle');
       }
     };
 
@@ -837,16 +822,6 @@ export const MoroCompanion = forwardRef<MoroCompanionHandle, MoroCompanionProps>
                 <button className="moro-companion__inspect" type="button" onClick={() => { onInspectSystem(); closeDialogue(); }}>
                   Inspect unusual signal
                 </button>
-                <div className="moro-companion__alter-links">
-                  <button type="button" onClick={() => { onDiscoverClue?.('C01'); closeDialogue(); }}>
-                    MORO status note
-                  </button>
-                  {discoveredClues.includes('C02') && (
-                    <button type="button" onClick={() => { onDiscoverClue?.('C05'); closeDialogue(); }}>
-                      Ask about omitted observations
-                    </button>
-                  )}
-                </div>
                 <p className="moro-companion__note">Try dragging, tapping twice, pressing and holding, or moving me with the arrow keys. Scripted companion, no live AI.</p>
               </div>
             )}

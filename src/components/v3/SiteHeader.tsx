@@ -80,10 +80,10 @@ export const SiteHeader: React.FC<SiteHeaderProps> = ({ activeSection }) => {
         <>
           <div className="mobile-menu-scrim" onClick={() => setOpen(false)} aria-hidden="true" />
           <nav ref={panelRef} id="mobile-navigation" className="mobile-menu" aria-label="Mobile navigation">
-            {navItems.map((item) => (
+            {navItems.map((item, idx) => (
               <a key={item.id} href={`#${item.id}`} onClick={() => setOpen(false)}>
                 <span>{item.label}</span>
-                <span className="mono-label">0{navItems.findIndex((nav) => nav.id === item.id) + 1}</span>
+                <span className="mono-label">0{idx + 1}</span>
               </a>
             ))}
             <a
