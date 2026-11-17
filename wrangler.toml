@@ -1,4 +1,8 @@
-# Cloudflare Pages — nama project harus sama dengan nama di dashboard Cloudflare.
+# Cloudflare — nama harus sama dengan project di dashboard.
 name = "my-portofolio"
 compatibility_date = "2026-11-17"
-pages_build_output_dir = "dist"
+
+# Deploy statis: hasil `npm run build` ada di folder dist/.
+# Ini membuat `npx wrangler deploy` tahu harus upload apa tanpa perlu field "build output" di dashboard.
+[assets]
+directory = "./dist"
