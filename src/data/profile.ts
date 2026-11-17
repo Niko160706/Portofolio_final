@@ -50,7 +50,7 @@ export const profile: ProfileData = {
   email: "gradientacademy57@gmail.com",
   linkedinUrl: "https://linkedin.com/in/niko-rajani-syahputra-1857b3403",
   githubUrl: "https://github.com/Niko160706",
-  resumeUrl: "/resume.pdf",
+  resumeUrl: "/CV_NikoRajaniSyahputra.pdf",
   summary: "Mahasiswa S1 Informatika di Telkom University Surabaya dengan latar belakang SMK TKJ. Berpengalaman sebagai Wakil Ketua Divisi AI di UKM Coder mengajar komputasi dasar dan arsitektur neural network. Membangun platform pembelajaran visual kalkulus 3D, e-commerce pendataan UMKM, hingga sistem agen deep research berbasis otomasi.",
   education: [
     {

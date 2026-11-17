@@ -56,7 +56,7 @@ export const SiteHeader: React.FC<SiteHeaderProps> = ({ activeSection }) => {
         </nav>
 
         <a
-          href="/resume.pdf"
+          href="/CV_NikoRajaniSyahputra.pdf"
           target="_blank"
           rel="noopener noreferrer"
           className="header-cv"
@@ -87,7 +87,7 @@ export const SiteHeader: React.FC<SiteHeaderProps> = ({ activeSection }) => {
               </a>
             ))}
             <a
-              href="/resume.pdf"
+              href="/CV_NikoRajaniSyahputra.pdf"
               target="_blank"
               rel="noopener noreferrer"
               onClick={() => setOpen(false)}

@@ -42,7 +42,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ emailCopied, onC
           <a href={profile.githubUrl} target="_blank" rel="noopener noreferrer">
             <span>GitHub</span><span aria-hidden="true">↗</span>
           </a>
-          <a href="/resume.pdf" target="_blank" rel="noopener noreferrer">
+          <a href="/CV_NikoRajaniSyahputra.pdf" target="_blank" rel="noopener noreferrer">
             <span>Download CV</span><span aria-hidden="true">↓</span>
           </a>
         </nav>

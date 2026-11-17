@@ -20,7 +20,7 @@ describe('Acceptance Criteria Suite (T-01 through T-15)', () => {
     // Role and identity present
     expect(html).toContain(profile.name);
     expect(html).toContain(profile.focusPill);
-    expect(html).toContain('resume.pdf');
+    expect(html).toContain('CV_NikoRajaniSyahputra.pdf');
     expect(html).toContain('gradientacademy57@gmail.com');
 
     // All four projects linked in HTML
