@@ -1,5 +1,4 @@
-# Cloudflare Pages configuration for the static Astro build.
-# Deploy via Git integration (recommended) or: npx wrangler pages deploy dist --project-name the-human-protocol
-name = "the-human-protocol"
+# Cloudflare Pages — nama project harus sama dengan nama di dashboard Cloudflare.
+name = "my-portofolio"
 compatibility_date = "2026-11-17"
 pages_build_output_dir = "dist"
